@@ -1,6 +1,7 @@
 package com.terrypacker.baseball.entity;
 
 public class BaseballCardBuilder {
+
     private Integer id;
     private String playerName;
     private String teamName;

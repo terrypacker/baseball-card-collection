@@ -1,11 +1,13 @@
 package com.terrypacker.baseball.ui;
 
+import com.terrypacker.baseball.ui.collection.CollectionView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,13 +15,19 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.RouterLink;
+import java.util.function.Consumer;
 
 /**
  * @author Terry Packer
  */
 public abstract class BaseView extends AppLayout {
-    protected final Image logo = new Image("https://docs-v5.radixiot.com/img/logo.svg", "Mango Logo");
+
+    protected final Image logo = new Image("https://docs-v5.radixiot.com/img/logo.svg",
+        "Mango Logo");
     protected final Tabs menu;
     protected final H3 viewTitle;
     protected final String tabId;
@@ -37,8 +45,29 @@ public abstract class BaseView extends AppLayout {
 
     }
 
-    protected static Tab createTab(String tabId, String text, Class<? extends Component> navigationTarget,
-            VaadinIcon icon) {
+    protected static Component createFilterHeader(String labelText,
+        Consumer<String> filterChangeConsumer) {
+        NativeLabel label = new NativeLabel(labelText);
+        label.getStyle().set("padding-top", "var(--lumo-space-m)")
+            .set("font-size", "var(--lumo-font-size-xs)");
+        TextField textField = new TextField();
+        textField.setValueChangeMode(ValueChangeMode.EAGER);
+        textField.setClearButtonVisible(true);
+        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        textField.setWidthFull();
+        textField.getStyle().set("max-width", "100%");
+        textField.addValueChangeListener(
+            e -> filterChangeConsumer.accept(e.getValue()));
+        VerticalLayout layout = new VerticalLayout(label, textField);
+        layout.getThemeList().clear();
+        layout.getThemeList().add("spacing-xs");
+
+        return layout;
+    }
+
+    protected static Tab createTab(String tabId, String text,
+        Class<? extends Component> navigationTarget,
+        VaadinIcon icon) {
         final Tab tab = new Tab(icon.create());
         tab.setId(tabId);
         tab.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
@@ -110,9 +139,10 @@ public abstract class BaseView extends AppLayout {
     }
 
     protected Tab[] createMenuItems() {
-        return new Tab[] {
-                BaseView.createTab(CollectionView.TAB_ID,CollectionView.TITLE, CollectionView.class, VaadinIcon.DESKTOP),
-                // TODO Add other views here
+        return new Tab[]{
+            BaseView.createTab(CollectionView.TAB_ID, CollectionView.TITLE, CollectionView.class,
+                VaadinIcon.DESKTOP),
+            // TODO Add other views here
         };
     }
 }

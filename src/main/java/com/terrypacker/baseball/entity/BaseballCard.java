@@ -2,6 +2,7 @@ package com.terrypacker.baseball.entity;
 
 
 public class BaseballCard {
+
     private Integer id;
     private String playerName;
     private String teamName;
@@ -10,7 +11,9 @@ public class BaseballCard {
     private int year;
     private String notes;
 
-    public BaseballCard(Integer id, String playerName, String teamName, String brand, int cardNumber, int year, String notes) {
+    public BaseballCard(Integer id, String playerName, String teamName, String brand,
+        int cardNumber,
+        int year, String notes) {
         this.id = id;
         this.playerName = playerName;
         this.teamName = teamName;
@@ -79,13 +82,13 @@ public class BaseballCard {
     @Override
     public String toString() {
         return "BaseballCard{" +
-                "id=" + id +
-                ", playerName='" + playerName + '\'' +
-                ", teamName='" + teamName + '\'' +
-                ", brand='" + brand + '\'' +
-                ", cardNumber=" + cardNumber +
-                ", year=" + year +
-                ", notes='" + notes + '\'' +
-                '}';
+            "id=" + id +
+            ", playerName='" + playerName + '\'' +
+            ", teamName='" + teamName + '\'' +
+            ", brand='" + brand + '\'' +
+            ", cardNumber=" + cardNumber +
+            ", year=" + year +
+            ", notes='" + notes + '\'' +
+            '}';
     }
 }

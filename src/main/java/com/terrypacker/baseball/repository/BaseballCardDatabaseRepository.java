@@ -4,19 +4,22 @@ import com.terrypacker.baseball.db.tables.Baseballcard;
 import com.terrypacker.baseball.db.tables.records.BaseballcardRecord;
 import com.terrypacker.baseball.entity.BaseballCard;
 import com.terrypacker.baseball.entity.BaseballCardBuilder;
-
+import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Select;
 import org.jooq.impl.DSL;
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class BaseballCardDatabaseRepository extends JooqRepository implements BaseballCardRepository {
+public class BaseballCardDatabaseRepository extends JooqRepository implements
+    BaseballCardRepository {
 
     public BaseballCardDatabaseRepository(DSLContext dslContext) {
         super(dslContext);
@@ -24,9 +27,9 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
 
     @Override
     public <S extends BaseballCard> Mono<S> save(S entity) {
-        if(entity.getId() == null) {
+        if (entity.getId() == null) {
             return insert(entity);
-        }else {
+        } else {
             return update(entity);
         }
     }
@@ -44,11 +47,11 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
     private <S extends BaseballCard> Mono<S> update(S entity) {
         return Mono.fromCallable(() -> {
             int updated = create.update(Baseballcard.BASEBALLCARD)
-                    .set(mapToRecord(entity))
-                    .where(Baseballcard.BASEBALLCARD.ID.eq(entity.getId())).execute();
-            if(updated > 0) {
+                .set(mapToRecord(entity))
+                .where(Baseballcard.BASEBALLCARD.ID.eq(entity.getId())).execute();
+            if (updated > 0) {
                 return entity;
-            }else {
+            } else {
                 return null;
             }
         });
@@ -65,8 +68,10 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
     }
 
     @Override
-    public Mono<BaseballCard> findById( Integer id) {
-        return Mono.justOrEmpty(create.fetchOptional(Baseballcard.BASEBALLCARD, Baseballcard.BASEBALLCARD.ID.eq(id)).map(this::unmapFromRecord));
+    public Mono<BaseballCard> findById(Integer id) {
+        return Mono.justOrEmpty(
+            create.fetchOptional(Baseballcard.BASEBALLCARD, Baseballcard.BASEBALLCARD.ID.eq(id))
+                .map(this::unmapFromRecord));
     }
 
     @Override
@@ -86,7 +91,8 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
 
     @Override
     public Flux<BaseballCard> findAll() {
-        return Flux.fromStream(create.fetchStream(Baseballcard.BASEBALLCARD).map(this::unmapFromRecord));
+        return Flux.fromStream(
+            create.fetchStream(Baseballcard.BASEBALLCARD).map(this::unmapFromRecord));
     }
 
     @Override
@@ -95,7 +101,8 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
         ids.forEach(id -> {
             condition.and(Baseballcard.BASEBALLCARD.ID.eq(id));
         });
-        return Flux.fromStream(create.fetchStream(Baseballcard.BASEBALLCARD, condition).map(this::unmapFromRecord));
+        return Flux.fromStream(
+            create.fetchStream(Baseballcard.BASEBALLCARD, condition).map(this::unmapFromRecord));
     }
 
     @Override
@@ -112,8 +119,8 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
     public Mono<Void> deleteById(Integer id) {
         //TODO Use mono properly
         create.deleteFrom(Baseballcard.BASEBALLCARD)
-                .where(Baseballcard.BASEBALLCARD.ID.eq(id))
-                .execute();
+            .where(Baseballcard.BASEBALLCARD.ID.eq(id))
+            .execute();
         return Mono.empty();
     }
 
@@ -167,16 +174,53 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
         throw new RuntimeException("Not implemented yet");
     }
 
+
+    //TODO Change to Flux
+    @Override
+    public Stream<BaseballCard> query(Optional<BaseballCardFilter> filter, int limit, int offset) {
+        Condition condition = DSL.trueCondition();
+        if (filter.isPresent()) {
+            BaseballCardFilter baseballCardFilter = filter.get();
+            for (Filter f : baseballCardFilter.getFilters()) {
+                if (f.hasValue()) {
+                    condition = addAndCondition(f, condition);
+                }
+            }
+        }
+        Select<BaseballcardRecord> select = create.selectFrom(Baseballcard.BASEBALLCARD)
+            .where(condition).limit(limit).offset(offset);
+        return this.create.fetchStream(select).map(this::unmapFromRecord);
+    }
+
+    private Condition addAndCondition(Filter<?> f, Condition condition) {
+        return condition.and(f.getCondition());
+    }
+
+
+    @Override
+    public int countQuery(Optional<BaseballCardFilter> filter) {
+        Condition condition = DSL.trueCondition();
+        if (filter.isPresent()) {
+            BaseballCardFilter baseballCardFilter = filter.get();
+            for (Filter f : baseballCardFilter.getFilters()) {
+                if (f.hasValue()) {
+                    condition = addAndCondition(f, condition);
+                }
+            }
+        }
+        return this.create.fetchCount(Baseballcard.BASEBALLCARD, condition);
+    }
+
     protected BaseballCard unmapFromRecord(BaseballcardRecord record) {
         return BaseballCardBuilder.get()
-                .setId(record.getId())
-                .setPlayerName(record.getPlayer())
-                .setTeamName(record.getTeam())
-                .setBrand(record.getBrand())
-                .setCardNumber(record.getCardnumber())
-                .setYear(record.getYear())
-                .setNotes(record.getNotes())
-                .build();
+            .setId(record.getId())
+            .setPlayerName(record.getPlayer())
+            .setTeamName(record.getTeam())
+            .setBrand(record.getBrand())
+            .setCardNumber(record.getCardnumber())
+            .setYear(record.getYear())
+            .setNotes(record.getNotes())
+            .build();
     }
 
     protected BaseballcardRecord mapToRecord(BaseballCard entity) {
@@ -190,4 +234,5 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements Ba
         record.setNotes(entity.getNotes());
         return record;
     }
+
 }

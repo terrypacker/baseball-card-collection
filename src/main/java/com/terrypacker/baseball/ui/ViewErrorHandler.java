@@ -1,15 +1,13 @@
 package com.terrypacker.baseball.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.ErrorEvent;
 import com.vaadin.flow.server.ErrorHandler;
-
 import jakarta.annotation.Nonnull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,12 +15,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ViewErrorHandler implements ErrorHandler {
+
     private static final Logger logger = LoggerFactory.getLogger(ViewErrorHandler.class);
 
     @Override
     public void error(ErrorEvent errorEvent) {
         logger.error("Uncaught error", errorEvent.getThrowable());
-        if(UI.getCurrent() != null) {
+        if (UI.getCurrent() != null) {
             displayError(errorEvent.getThrowable());
         }
     }
@@ -48,7 +47,8 @@ public class ViewErrorHandler implements ErrorHandler {
 
     protected void displayError(@Nonnull String message) {
         UI.getCurrent().access(() -> {
-            Notification notification = new Notification("Error: " + message, 5000, Notification.Position.BOTTOM_START);
+            Notification notification = new Notification("Error: " + message, 5000,
+                Notification.Position.BOTTOM_START);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.open();
         });

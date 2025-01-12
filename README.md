@@ -11,18 +11,18 @@ Application for tracking your card collection
 ## Usage
 
 ### Run postgres container for testing
-```
+```shell
 docker run --name postgres-baseball -e POSTGRES_DB=baseball-card-collection -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:16
 ```
 
 ### Build Docker Image
 Build the Vaadin UI for production and package up into image
-```
+```shell
 ./mvnw clean vaadin:prepare-frontend install spring-boot:build-image -Pproduction
 ```
 ### Run Docker Image
 See docker-compose.yml included for reference
-```
+```shell
 docker compose up -d --force-recreate
 ```
 

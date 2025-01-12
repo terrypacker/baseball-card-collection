@@ -1,7 +1,7 @@
 terrypacker:
   baseball:
     card:
-      data-file: resource:config/cards.csv
+      data-file: classpath:/config/cards.csv
 spring:
   h2:
     console:
