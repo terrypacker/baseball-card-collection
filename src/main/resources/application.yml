@@ -1,0 +1,19 @@
+terrypacker:
+  baseball:
+    card:
+      data-file: resource:config/cards.csv
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/baseball-card-collection
+    driverClassName: org.postgresql.Driver
+    username: admin
+    password: admin
+  jooq:
+    sql-dialect: Postgres
+  flyway:
+    default-schema: baseball-card-collection
+server:
+  port: 8081

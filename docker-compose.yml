@@ -1,0 +1,8 @@
+services:
+  mango-orchard:
+    ports:
+      - 8080:8080
+    volumes:
+      - ~/mango-orchard-data
+    restart: unless-stopped
+    image: mango-orchard:0.0.1-SNAPSHOT
