@@ -27,7 +27,7 @@ public class BaseballCardDataProvider extends
 
     @Override
     protected Stream<BaseballCard> fetchFromBackEnd(Query<BaseballCard, Void> query) {
-        return baseballCardService.query(configuredFilter, query.getLimit(), query.getOffset());
+        return baseballCardService.query(configuredFilter, query.getSortOrders(), query.getLimit(), query.getOffset());
     }
 
     @Override

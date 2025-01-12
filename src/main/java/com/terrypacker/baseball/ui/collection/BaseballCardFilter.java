@@ -85,12 +85,12 @@ public class BaseballCardFilter {
         this.dataProvider.setFilter(this);
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(Integer cardNumber) {
         this.cardNumber.setFilterValue(cardNumber);
         this.dataProvider.setFilter(this);
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year.setFilterValue(year);
         this.dataProvider.setFilter(this);
     }

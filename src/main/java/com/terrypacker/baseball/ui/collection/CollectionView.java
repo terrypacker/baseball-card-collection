@@ -28,6 +28,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.jooq.tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
@@ -75,18 +76,29 @@ public class CollectionView extends BaseView {
         Grid<BaseballCard> grid = new Grid<>(baseballCardDataProvider.withConfigurableFilter());
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         Grid.Column<BaseballCard> playerColumn = grid.addColumn(BaseballCard::getPlayerName)
-            .setHeader("Player").setSortable(true);
+            .setHeader("Player")
+            .setSortable(true)
+            .setSortProperty("player");
         Grid.Column<BaseballCard> teamColumn = grid.addColumn(BaseballCard::getTeamName)
-            .setHeader("Team").setSortable(true);
+            .setHeader("Team")
+            .setSortable(true)
+            .setSortProperty("team");
         Grid.Column<BaseballCard> brandColumn = grid.addColumn(BaseballCard::getBrand)
-            .setHeader("Brand").setSortable(true);
+            .setHeader("Brand")
+            .setSortable(true)
+            .setSortProperty("brand");
         Grid.Column<BaseballCard> cardNumberColumn = grid.addColumn(BaseballCard::getCardNumber)
-            .setHeader("Card Number").setSortable(true);
+            .setHeader("Card Number")
+            .setSortable(true)
+            .setSortProperty("cardnumber");
         Grid.Column<BaseballCard> yearColumn = grid.addColumn(BaseballCard::getYear)
             .setHeader("Year")
-            .setSortable(true);
+            .setSortable(true)
+            .setSortProperty("year");
         Grid.Column<BaseballCard> notesColumn = grid.addColumn(BaseballCard::getNotes)
-            .setHeader("Notes").setSortable(true);
+            .setHeader("Notes")
+            .setSortable(true)
+            .setSortProperty("notes");
 
         //Setup filtering
         BaseballCardFilter filter = new BaseballCardFilter(baseballCardDataProvider);
@@ -95,6 +107,28 @@ public class CollectionView extends BaseView {
         HeaderRow headerRow = grid.appendHeaderRow();
         headerRow.getCell(playerColumn).setComponent(
             createFilterHeader("Player", filter::setPlayerName));
+       headerRow.getCell(teamColumn).setComponent(
+          createFilterHeader("Team", filter::setTeamName));
+      headerRow.getCell(brandColumn).setComponent(
+          createFilterHeader("Brand", filter::setBrand));
+      headerRow.getCell(cardNumberColumn).setComponent(
+          createFilterHeader("Card Number", v -> {
+            try {
+              filter.setCardNumber(Integer.parseInt(v));
+            }catch(Exception e) {
+              filter.setCardNumber(null);
+            }
+          }));
+      headerRow.getCell(yearColumn).setComponent(
+          createFilterHeader("Year", (v) -> {
+            try {
+              filter.setYear(Integer.parseInt(v));
+            }catch(Exception e) {
+              filter.setYear(null);
+            }
+          }));
+      headerRow.getCell(notesColumn).setComponent(
+          createFilterHeader("Notes", filter::setNotes));
 
         //Setup inline editing
         Binder<BaseballCard> binder = new Binder<>(BaseballCard.class);

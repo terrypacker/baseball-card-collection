@@ -5,11 +5,17 @@ import com.terrypacker.baseball.db.tables.records.BaseballcardRecord;
 import com.terrypacker.baseball.entity.BaseballCard;
 import com.terrypacker.baseball.entity.BaseballCardBuilder;
 import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
+import com.vaadin.flow.data.provider.QuerySortOrder;
+import com.vaadin.flow.data.provider.SortDirection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Select;
+import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
@@ -177,7 +183,8 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements
 
     //TODO Change to Flux
     @Override
-    public Stream<BaseballCard> query(Optional<BaseballCardFilter> filter, int limit, int offset) {
+    public Stream<BaseballCard> query(Optional<BaseballCardFilter> filter,
+        List<QuerySortOrder> sortOrders, int limit, int offset) {
         Condition condition = DSL.trueCondition();
         if (filter.isPresent()) {
             BaseballCardFilter baseballCardFilter = filter.get();
@@ -188,8 +195,15 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements
             }
         }
         Select<BaseballcardRecord> select = create.selectFrom(Baseballcard.BASEBALLCARD)
-            .where(condition).limit(limit).offset(offset);
+            .where(condition).orderBy(getOrderBy(sortOrders)).limit(limit).offset(offset);
         return this.create.fetchStream(select).map(this::unmapFromRecord);
+    }
+
+    private List<SortField<?>> getOrderBy(List<QuerySortOrder> sortOrders) {
+        return sortOrders.stream().map(so -> {
+            Field<?> field = Baseballcard.BASEBALLCARD.field(so.getSorted());
+            return so.getDirection() == SortDirection.ASCENDING ? field.asc() : field.desc();
+        }).collect(Collectors.toList());
     }
 
     private Condition addAndCondition(Filter<?> f, Condition condition) {

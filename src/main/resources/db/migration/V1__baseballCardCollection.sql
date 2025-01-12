@@ -13,6 +13,7 @@ CREATE TABLE baseballCard(
 
 CREATE TABLE baseballCardValue (
     baseballCardId INT NOT NULL,
+    grade VARCHAR(255),
     value BIGINT,
     time TIMESTAMP
 );
