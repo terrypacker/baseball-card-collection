@@ -5,7 +5,6 @@ import com.helger.commons.csv.CSVReader;
 import com.terrypacker.baseball.entity.BaseballCard;
 import com.terrypacker.baseball.entity.BaseballCardBuilder;
 import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
-import com.vaadin.flow.data.provider.QuerySortOrder;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -169,7 +168,7 @@ public class BaseballCardFileRepository implements BaseballCardRepository {
 
     @Override
     public Stream<BaseballCard> query(Optional<BaseballCardFilter> filter,
-        List<QuerySortOrder> sortOrders, int limit, int offset) {
+        Sort sort, int limit, int offset) {
         throw new RuntimeException("Not implemented yet");
     }
 

@@ -5,8 +5,15 @@ import com.terrypacker.baseball.service.BaseballCardService;
 import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.provider.QuerySortOrder;
+import com.vaadin.flow.data.provider.SortDirection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +34,28 @@ public class BaseballCardDataProvider extends
 
     @Override
     protected Stream<BaseballCard> fetchFromBackEnd(Query<BaseballCard, Void> query) {
-        return baseballCardService.query(configuredFilter, query.getSortOrders(), query.getLimit(), query.getOffset());
+        return baseballCardService.query(configuredFilter, convertSort(query.getSortOrders()), query.getLimit(), query.getOffset());
+    }
+
+    /**
+     * TODO Move to base service
+     * @param sortOrders
+     * @return
+     */
+    protected Sort convertSort(List<QuerySortOrder> sortOrders) {
+        Sort sort;
+        if(sortOrders.size() == 0) {
+            sort = Sort.unsorted();
+        }else {
+            List<Order> orders = new ArrayList<>(sortOrders.size());
+            for (QuerySortOrder sortOrder : sortOrders) {
+                orders.add(new Order(
+                    sortOrder.getDirection() == SortDirection.ASCENDING ? Direction.ASC
+                        : Direction.DESC, sortOrder.getSorted()));
+            }
+            sort = Sort.by(orders);
+        }
+        return sort;
     }
 
     @Override
@@ -55,4 +83,6 @@ public class BaseballCardDataProvider extends
         this.configuredFilter = Optional.ofNullable(filter);
         refreshAll();
     }
+
+
 }

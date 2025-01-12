@@ -5,8 +5,7 @@ import com.terrypacker.baseball.db.tables.records.BaseballcardRecord;
 import com.terrypacker.baseball.entity.BaseballCard;
 import com.terrypacker.baseball.entity.BaseballCardBuilder;
 import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
-import com.vaadin.flow.data.provider.QuerySortOrder;
-import com.vaadin.flow.data.provider.SortDirection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,15 +18,16 @@ import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class BaseballCardDatabaseRepository extends JooqRepository implements
+public class BaseballCardJooqRepository extends JooqRepository implements
     BaseballCardRepository {
 
-    public BaseballCardDatabaseRepository(DSLContext dslContext) {
+    public BaseballCardJooqRepository(DSLContext dslContext) {
         super(dslContext);
     }
 
@@ -184,7 +184,7 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements
     //TODO Change to Flux
     @Override
     public Stream<BaseballCard> query(Optional<BaseballCardFilter> filter,
-        List<QuerySortOrder> sortOrders, int limit, int offset) {
+        Sort sort, int limit, int offset) {
         Condition condition = DSL.trueCondition();
         if (filter.isPresent()) {
             BaseballCardFilter baseballCardFilter = filter.get();
@@ -195,15 +195,19 @@ public class BaseballCardDatabaseRepository extends JooqRepository implements
             }
         }
         Select<BaseballcardRecord> select = create.selectFrom(Baseballcard.BASEBALLCARD)
-            .where(condition).orderBy(getOrderBy(sortOrders)).limit(limit).offset(offset);
+            .where(condition).orderBy(getOrderBy(sort)).limit(limit).offset(offset);
         return this.create.fetchStream(select).map(this::unmapFromRecord);
     }
 
-    private List<SortField<?>> getOrderBy(List<QuerySortOrder> sortOrders) {
-        return sortOrders.stream().map(so -> {
-            Field<?> field = Baseballcard.BASEBALLCARD.field(so.getSorted());
-            return so.getDirection() == SortDirection.ASCENDING ? field.asc() : field.desc();
-        }).collect(Collectors.toList());
+    private List<SortField<?>> getOrderBy(Sort sort) {
+        if(sort.isUnsorted()) {
+            return Collections.emptyList();
+        }else {
+            return sort.get().map(so -> {
+                Field<?> field = Baseballcard.BASEBALLCARD.field(so.getProperty());
+                return so.getDirection() == Direction.ASC ? field.asc() : field.desc();
+            }).collect(Collectors.toList());
+        }
     }
 
     private Condition addAndCondition(Filter<?> f, Condition condition) {
