@@ -1,10 +1,10 @@
-package com.terrypacker.baseball.repository;
+package com.terrypacker.baseball.repository.baseballcard;
 
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.csv.CSVReader;
-import com.terrypacker.baseball.entity.BaseballCard;
-import com.terrypacker.baseball.entity.BaseballCardBuilder;
-import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCardBuilder;
+import com.terrypacker.baseball.ui.view.collection.BaseballCardFilter;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

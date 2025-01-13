@@ -1,9 +1,10 @@
-package com.terrypacker.baseball.entity;
+package com.terrypacker.baseball.entity.baseballcard;
 
 
-public class BaseballCard {
+import com.terrypacker.baseball.entity.IdEntity;
 
-    private Integer id;
+public class BaseballCard extends IdEntity {
+
     private String playerName;
     private String teamName;
     private String brand;
@@ -21,14 +22,6 @@ public class BaseballCard {
         this.cardNumber = cardNumber;
         this.year = year;
         this.notes = notes;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getPlayerName() {

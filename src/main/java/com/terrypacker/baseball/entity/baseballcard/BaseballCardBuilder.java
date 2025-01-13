@@ -1,4 +1,4 @@
-package com.terrypacker.baseball.entity;
+package com.terrypacker.baseball.entity.baseballcard;
 
 public class BaseballCardBuilder {
 

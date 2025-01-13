@@ -1,10 +1,12 @@
-package com.terrypacker.baseball.ui;
+package com.terrypacker.baseball.ui.view;
 
-import com.terrypacker.baseball.ui.collection.CollectionView;
+import com.terrypacker.baseball.service.SecurityService;
+import com.terrypacker.baseball.ui.view.collection.CollectionView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.NativeLabel;
@@ -26,15 +28,18 @@ import java.util.function.Consumer;
  */
 public abstract class BaseView extends AppLayout {
 
+    protected final H3 viewTitle;
+    protected final String tabId;
+    protected final SecurityService securityService;
+
     protected final Image logo = new Image("https://docs-v5.radixiot.com/img/logo.svg",
         "Mango Logo");
     protected final Tabs menu;
-    protected final H3 viewTitle;
-    protected final String tabId;
 
-    protected BaseView(String viewTitle, String tabId) {
+    protected BaseView(String viewTitle, String tabId, SecurityService securityService) {
         this.tabId = tabId;
         this.viewTitle = new H3(viewTitle);
+        this.securityService = securityService;
         setPrimarySection(Section.DRAWER);
         createHeaderContent();
         // Make the nav bar a header
@@ -93,8 +98,11 @@ public abstract class BaseView extends AppLayout {
         logo.setMaxHeight("50px");
         logoLayout.add(logo);
 
+        String username = securityService.getAuthenticatedUser().getUsername();
+        Button logout = new Button("Log out " + username, e -> securityService.logout());
+
         // Display the logo and the menu in the drawer
-        layout.add(logoLayout, menu);
+        layout.add(logoLayout, menu, logout);
         return layout;
     }
 

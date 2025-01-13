@@ -1,6 +1,6 @@
-package com.terrypacker.baseball.ui.collection;
+package com.terrypacker.baseball.ui.view.collection;
 
-import com.terrypacker.baseball.entity.BaseballCard;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
 import com.terrypacker.baseball.service.BaseballCardService;
 import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;

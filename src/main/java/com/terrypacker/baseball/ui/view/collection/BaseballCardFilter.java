@@ -1,4 +1,4 @@
-package com.terrypacker.baseball.ui.collection;
+package com.terrypacker.baseball.ui.view.collection;
 
 import com.terrypacker.baseball.db.tables.Baseballcard;
 import com.terrypacker.baseball.repository.Filter;

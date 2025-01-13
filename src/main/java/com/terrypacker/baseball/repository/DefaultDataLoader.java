@@ -2,8 +2,11 @@ package com.terrypacker.baseball.repository;
 
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.csv.CSVReader;
-import com.terrypacker.baseball.entity.BaseballCard;
-import com.terrypacker.baseball.entity.BaseballCardBuilder;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCardBuilder;
+import com.terrypacker.baseball.entity.user.ApplicationUser;
+import com.terrypacker.baseball.repository.baseballcard.BaseballCardRepository;
+import com.terrypacker.baseball.repository.user.ApplicationUserRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,19 +22,30 @@ import org.springframework.stereotype.Component;
  * @author Terry Packer
  */
 @Component
-public class DefaultCardLoader implements ApplicationListener<ContextRefreshedEvent> {
+public class DefaultDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final Resource cardDataFile;
     private final BaseballCardRepository cardRepository;
+    private final ApplicationUserRepository applicationUserRepository;
 
-    public DefaultCardLoader(BaseballCardRepository baseballCardRepository,
+    public DefaultDataLoader(BaseballCardRepository baseballCardRepository,
+        ApplicationUserRepository applicationUserRepository,
         @Value("${terrypacker.baseball.card.data-file}") Resource cardDataFile) {
         this.cardRepository = baseballCardRepository;
+        this.applicationUserRepository = applicationUserRepository;
         this.cardDataFile = cardDataFile;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        //See if we need a defaul user
+        if(this.applicationUserRepository.count().block() <= 0L) {
+            ApplicationUser user = new ApplicationUser();
+            user.setUsername("admin");
+            user.setPassword("{plain}admin");
+            this.applicationUserRepository.save(user).block();
+        }
+
         try {
             //See if there are any cards?
             if (this.cardRepository.count().block() > 0L) {

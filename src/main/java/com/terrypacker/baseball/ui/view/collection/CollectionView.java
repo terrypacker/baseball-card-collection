@@ -1,9 +1,10 @@
-package com.terrypacker.baseball.ui.collection;
+package com.terrypacker.baseball.ui.view.collection;
 
-import com.terrypacker.baseball.entity.BaseballCard;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
 import com.terrypacker.baseball.service.BaseballCardService;
-import com.terrypacker.baseball.ui.BaseView;
+import com.terrypacker.baseball.service.SecurityService;
 import com.terrypacker.baseball.ui.ValidationMessage;
+import com.terrypacker.baseball.ui.view.BaseView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.button.Button;
@@ -23,18 +24,19 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.PermitAll;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.jooq.tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Terry Packer
  */
+@PermitAll
 @Route("/collection")
 public class CollectionView extends BaseView {
 
@@ -44,8 +46,8 @@ public class CollectionView extends BaseView {
     private final BaseballCardService baseballCardService;
 
     public CollectionView(
-        @Autowired BaseballCardService baseballCardService) {
-        super(TITLE, TAB_ID);
+        @Autowired BaseballCardService baseballCardService, SecurityService securityService) {
+        super(TITLE, TAB_ID, securityService);
         this.baseballCardService = baseballCardService;
     }
 

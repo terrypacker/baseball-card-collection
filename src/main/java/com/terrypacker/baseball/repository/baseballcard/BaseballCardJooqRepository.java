@@ -1,10 +1,12 @@
-package com.terrypacker.baseball.repository;
+package com.terrypacker.baseball.repository.baseballcard;
 
 import com.terrypacker.baseball.db.tables.Baseballcard;
 import com.terrypacker.baseball.db.tables.records.BaseballcardRecord;
-import com.terrypacker.baseball.entity.BaseballCard;
-import com.terrypacker.baseball.entity.BaseballCardBuilder;
-import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCardBuilder;
+import com.terrypacker.baseball.repository.Filter;
+import com.terrypacker.baseball.repository.JooqRepository;
+import com.terrypacker.baseball.ui.view.collection.BaseballCardFilter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,43 +26,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class BaseballCardJooqRepository extends JooqRepository implements
+public class BaseballCardJooqRepository extends
+    JooqRepository<Baseballcard, BaseballCard, BaseballcardRecord> implements
     BaseballCardRepository {
 
     public BaseballCardJooqRepository(DSLContext dslContext) {
-        super(dslContext);
-    }
-
-    @Override
-    public <S extends BaseballCard> Mono<S> save(S entity) {
-        if (entity.getId() == null) {
-            return insert(entity);
-        } else {
-            return update(entity);
-        }
-    }
-
-    private <S extends BaseballCard> Mono<S> insert(S entity) {
-        return Mono.fromCallable(() -> {
-            BaseballcardRecord record = mapToRecord(entity);
-            record.changed(Baseballcard.BASEBALLCARD.ID, false);
-            Integer id = create.insertInto(Baseballcard.BASEBALLCARD).set(record).execute();
-            entity.setId(id);
-            return entity;
-        });
-    }
-
-    private <S extends BaseballCard> Mono<S> update(S entity) {
-        return Mono.fromCallable(() -> {
-            int updated = create.update(Baseballcard.BASEBALLCARD)
-                .set(mapToRecord(entity))
-                .where(Baseballcard.BASEBALLCARD.ID.eq(entity.getId())).execute();
-            if (updated > 0) {
-                return entity;
-            } else {
-                return null;
-            }
-        });
+        super(dslContext, Baseballcard.BASEBALLCARD);
     }
 
     @Override
@@ -71,13 +42,6 @@ public class BaseballCardJooqRepository extends JooqRepository implements
     @Override
     public <S extends BaseballCard> Flux<S> saveAll(Publisher<S> entityStream) {
         return null;
-    }
-
-    @Override
-    public Mono<BaseballCard> findById(Integer id) {
-        return Mono.justOrEmpty(
-            create.fetchOptional(Baseballcard.BASEBALLCARD, Baseballcard.BASEBALLCARD.ID.eq(id))
-                .map(this::unmapFromRecord));
     }
 
     @Override
@@ -114,11 +78,6 @@ public class BaseballCardJooqRepository extends JooqRepository implements
     @Override
     public Flux<BaseballCard> findAllById(Publisher<Integer> idStream) {
         throw new RuntimeException("Not implemented yet");
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return Mono.just((long) create.fetchCount(Baseballcard.BASEBALLCARD));
     }
 
     @Override
@@ -251,6 +210,11 @@ public class BaseballCardJooqRepository extends JooqRepository implements
         record.setYear(entity.getYear());
         record.setNotes(entity.getNotes());
         return record;
+    }
+
+    @Override
+    protected Field<Integer> getIdField() {
+        return table.ID;
     }
 
 }

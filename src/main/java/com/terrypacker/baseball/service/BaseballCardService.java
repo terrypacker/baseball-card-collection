@@ -1,8 +1,8 @@
 package com.terrypacker.baseball.service;
 
-import com.terrypacker.baseball.entity.BaseballCard;
-import com.terrypacker.baseball.repository.BaseballCardRepository;
-import com.terrypacker.baseball.ui.collection.BaseballCardFilter;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
+import com.terrypacker.baseball.repository.baseballcard.BaseballCardRepository;
+import com.terrypacker.baseball.ui.view.collection.BaseballCardFilter;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.data.domain.Sort;
