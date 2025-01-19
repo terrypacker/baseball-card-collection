@@ -7,6 +7,7 @@ Application for tracking your card collection
 ## Technologies
 * Vaadin 24 Flow and Components (React UI)
 * OCI Docker Spring Boot Support
+* JOOQ
 
 ## Usage
 
