@@ -184,6 +184,54 @@
                     <nodeAutoUpdate>true</nodeAutoUpdate>
                 </configuration>
             </plugin>
+            <plugin>
+                <!-- https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-maven-plugin -->
+                <!-- Generate EBay Client -->
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.7.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/api-specs/ebay-api/buy_browse_v1_oas3.json</inputSpec>
+                            <generatorName>java</generatorName>
+                            <apiPackage>com.terrypacker.ebay.browse.api</apiPackage>
+                            <modelPackage>com.terrypacker.ebay.browse.models</modelPackage>
+                            <library>restclient</library>
+                            <importMappings>
+                                <importMapping>Locale=java.util.Locale</importMapping>
+                            </importMappings>
+
+                            <!-- to output possible settings -->
+                            <configHelp>false</configHelp>
+                            <!-- The tests use both Junit 4 and 5 so disable for now, enable if you want examples -->
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiTests>false</generateApiTests>
+                            <!-- Skip generation if not needed -->
+                            <skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>
+                            <configOptions>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                <!-- Disable OpenAPI Jackson nullable library -->
+                                <openApiNullable>false</openApiNullable>
+                                <!-- Generate code for Spring Boot 3 -->
+                                <useSpringBoot3>true</useSpringBoot3>
+
+                                <!-- Use jakarta.* instead of java.* imports -->
+                                <useJakartaEe>true</useJakartaEe>
+
+                                <!-- Disable documentation annotations -->
+                                <annotationLibrary>none</annotationLibrary>
+
+                                <!-- Disable OpenAPI documentation -->
+                                <documentationProvider>none</documentationProvider>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

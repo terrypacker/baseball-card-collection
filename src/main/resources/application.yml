@@ -1,4 +1,7 @@
 terrypacker:
+  ebay:
+    api:
+      baseUrl: https://api.ebay.com
   baseball:
     card:
       data-file: classpath:/config/cards.csv
