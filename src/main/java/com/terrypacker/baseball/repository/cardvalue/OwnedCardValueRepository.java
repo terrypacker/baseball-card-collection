@@ -3,6 +3,8 @@ package com.terrypacker.baseball.repository.cardvalue;
 import com.terrypacker.baseball.entity.cardvalue.OwnedCardValue;
 import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Sort.Direction;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -20,4 +22,5 @@ public interface OwnedCardValueRepository {
      */
     Mono<OwnedCardValue> getLatestValue(OwnedCard ownedCard) throws NoSuchElementException;
 
+    Flux<OwnedCardValue> getLatestValues(OwnedCard ownedCard, int limit, Direction direction);
 }

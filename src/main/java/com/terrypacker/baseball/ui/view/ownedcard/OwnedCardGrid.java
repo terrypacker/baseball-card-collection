@@ -1,10 +1,13 @@
 package com.terrypacker.baseball.ui.view.ownedcard;
 
+import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
 import com.terrypacker.baseball.entity.cardvalue.OwnedCardValue;
 import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
+import com.terrypacker.baseball.service.BaseballCardService;
 import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.ui.ValidationMessage;
 import com.terrypacker.baseball.ui.view.AbstractFilteredGrid;
+import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardTile;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.Text;
@@ -27,6 +30,7 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
 
     private OwnedCardDataProvider dataProvider;
     private OwnedCardValueService ownedCardValueService;
+    private BaseballCardService baseballCardService;
 
     private Grid.Column<OwnedCard> baseballCard;
     private Grid.Column<OwnedCard> cardIdentifierColumn;
@@ -34,17 +38,22 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
     private Grid.Column<OwnedCard> latestValueColumn;
 
     public OwnedCardGrid(OwnedCardDataProvider dataProvider, Consumer<OwnedCard> onSelected,
-        OwnedCardValueService ownedCardValueService) {
+        OwnedCardValueService ownedCardValueService,
+        BaseballCardService baseballCardService) {
         super(dataProvider.withConfigurableFilter(), new OwnedCardFilter(dataProvider), onSelected);
         this.dataProvider = dataProvider;
         this.ownedCardValueService = ownedCardValueService;
+        this.baseballCardService = baseballCardService;
         setupColumns();
         setupFiltering();
         setupEditing();
     }
 
     protected void setupColumns() {
-        this.baseballCard = addColumn(OwnedCard::getBaseballCardId)
+        this.baseballCard = addComponentColumn(oc -> {
+            BaseballCard card = baseballCardService.findById(oc.getBaseballCardId()).block();
+            return new BaseballCardTile(card);
+        })
             .setHeader("Card")
             .setSortable(true)
             .setSortProperty("ownedCardId");
@@ -58,7 +67,7 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
             .setSortProperty("notes");
         this.latestValueColumn = addComponentColumn(owned -> {
             try {
-                Mono<OwnedCardValue> result = ownedCardValueService.getOwnedCardValue(owned);
+                Mono<OwnedCardValue> result = ownedCardValueService.getLatestOwnedCardValue(owned);
                 OwnedCardValue ownedCardValue = result.block();
                 return new Text(currencyFormat.format(ownedCardValue.getValueInCents() / 100D));
             }catch(NoSuchElementException e) {

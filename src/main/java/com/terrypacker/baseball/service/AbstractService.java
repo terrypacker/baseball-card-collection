@@ -28,6 +28,11 @@ public class AbstractService<E extends IdEntity, R extends JooqRepository, F ext
         return repository.save(card);
     }
 
+    public Mono<E> findById(Integer id) {
+        return repository.findById(id);
+    }
+
+
     public Stream<E> query(Optional<F> filter,
         Sort sort, int limit, int offset) {
         return repository.query(filter, sort, limit, offset);

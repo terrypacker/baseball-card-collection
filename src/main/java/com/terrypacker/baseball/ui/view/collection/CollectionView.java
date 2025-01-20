@@ -66,7 +66,8 @@ public class CollectionView extends AbstractView {
         layout.add(header);
 
         OwnedCardDataProvider ownedCardDataProvider = new OwnedCardDataProvider(ownedCardService);
-        OwnedCardGrid ownedCardGrid = new OwnedCardGrid(ownedCardDataProvider, c -> {}, ownedCardValueService);
+        OwnedCardGrid ownedCardGrid = new OwnedCardGrid(ownedCardDataProvider, c -> {},
+            ownedCardValueService, baseballCardService);
 
         BaseballCardDataProvider baseballCardDataProvider = new BaseballCardDataProvider(
             baseballCardService);

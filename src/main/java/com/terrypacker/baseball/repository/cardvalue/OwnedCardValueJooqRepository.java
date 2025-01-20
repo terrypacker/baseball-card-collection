@@ -10,7 +10,9 @@ import java.util.NoSuchElementException;
 import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.jooq.Select;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -50,6 +52,14 @@ public class OwnedCardValueJooqRepository implements
             return Mono.error(new NoSuchElementException("No value found for card"));
         }
         return Mono.just(this.unmapFromRecord(result.get(0)));
+    }
+
+    @Override
+    public Flux<OwnedCardValue> getLatestValues(OwnedCard ownedCard, int limit, Direction direction) {
+        Select<OwnedcardvalueRecord> select = create.selectFrom(table)
+            .where(table.OWNEDCARDID.eq(ownedCard.getId())).orderBy(direction == Direction.ASC ? table.TIME.asc() : table.TIME.desc()).limit(limit);
+        return Flux.fromStream(
+            select.fetchStream().map(this::unmapFromRecord));
     }
 
     protected OwnedCardValue unmapFromRecord(OwnedcardvalueRecord record) {
