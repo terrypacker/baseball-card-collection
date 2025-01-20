@@ -12,7 +12,7 @@ public class OwnedCardCsvMappingStrategy extends
     AbstractCsvMappingStrategy<OwnedCard> {
 
     private static final String[] headers =
-        new String[]{"id", "ownedCardId", "cardIdentifier", "notes"};
+        new String[]{"id", "baseballCardId", "cardIdentifier", "notes"};
 
 
     @Override

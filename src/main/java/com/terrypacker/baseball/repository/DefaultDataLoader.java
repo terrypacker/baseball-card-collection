@@ -4,10 +4,13 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
 import com.terrypacker.baseball.entity.baseballcard.BaseballCardCsvMappingStrategy;
+import com.terrypacker.baseball.entity.cardvalue.OwnedCardValue;
+import com.terrypacker.baseball.entity.cardvalue.OwnedCardValueCsvMappingStrategy;
 import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
 import com.terrypacker.baseball.entity.ownedcard.OwnedCardCsvMappingStrategy;
 import com.terrypacker.baseball.entity.user.ApplicationUser;
 import com.terrypacker.baseball.repository.baseballcard.BaseballCardRepository;
+import com.terrypacker.baseball.repository.cardvalue.OwnedCardValueRepository;
 import com.terrypacker.baseball.repository.ownedcard.OwnedCardRepository;
 import com.terrypacker.baseball.repository.user.ApplicationUserRepository;
 import java.io.BufferedReader;
@@ -31,17 +34,23 @@ public class DefaultDataLoader implements ApplicationListener<ContextRefreshedEv
     private final BaseballCardRepository cardRepository;
     private final Resource ownedCardDataFile;
     private final OwnedCardRepository ownedCardRepository;
+    private final Resource cardValueDataFile;
+    private final OwnedCardValueRepository cardValueRepository;
     private final ApplicationUserRepository applicationUserRepository;
 
     public DefaultDataLoader(BaseballCardRepository baseballCardRepository,
         @Value("${terrypacker.baseball.card.data-file}") Resource cardDataFile,
         OwnedCardRepository ownedCardRepository,
         @Value("${terrypacker.baseball.card.owned.data-file}") Resource ownedCardDataFile,
+        OwnedCardValueRepository cardValueRepository,
+        @Value("${terrypacker.baseball.card.value.data-file}") Resource cardValueDataFile,
         ApplicationUserRepository applicationUserRepository) {
         this.cardRepository = baseballCardRepository;
         this.cardDataFile = cardDataFile;
         this.ownedCardRepository = ownedCardRepository;
         this.ownedCardDataFile = ownedCardDataFile;
+        this.cardValueRepository = cardValueRepository;
+        this.cardValueDataFile = cardValueDataFile;
         this.applicationUserRepository = applicationUserRepository;
     }
 
@@ -90,6 +99,21 @@ public class DefaultDataLoader implements ApplicationListener<ContextRefreshedEv
                     OwnedCard card = it.next();
                     card.setId(null);
                     this.ownedCardRepository.save(card).block();
+                }
+            }
+
+            //Insert Values from CSV
+            try (Reader cardReader = new BufferedReader(
+                new InputStreamReader(cardValueDataFile.getInputStream()));) {
+                CsvToBean<OwnedCardValue> csvReader =
+                    new CsvToBeanBuilder(cardReader).withMappingStrategy(new OwnedCardValueCsvMappingStrategy())
+                        .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withIgnoreEmptyLine(true)
+                        .build();
+
+                Iterator<OwnedCardValue> it = csvReader.iterator();
+                while (it.hasNext()) {
+                    OwnedCardValue value = it.next();
+                    this.cardValueRepository.insert(value).block();
                 }
             }
 

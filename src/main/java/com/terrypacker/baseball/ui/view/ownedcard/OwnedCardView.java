@@ -1,6 +1,7 @@
 package com.terrypacker.baseball.ui.view.ownedcard;
 
 import com.terrypacker.baseball.service.OwnedCardService;
+import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.service.SecurityService;
 import com.terrypacker.baseball.ui.view.BaseView;
 import com.vaadin.flow.component.html.Hr;
@@ -21,11 +22,14 @@ public class OwnedCardView extends BaseView {
     public static final String TAB_ID = "owned";
 
     private final OwnedCardService ownedCardService;
+    private final OwnedCardValueService ownedCardValueService;
 
     public OwnedCardView(
-        @Autowired OwnedCardService ownedCardService, SecurityService securityService) {
+        @Autowired OwnedCardService ownedCardService, SecurityService securityService,
+        OwnedCardValueService ownedCardValueService) {
         super(TITLE, TAB_ID, securityService);
         this.ownedCardService = ownedCardService;
+        this.ownedCardValueService = ownedCardValueService;
     }
 
     @PostConstruct
@@ -39,7 +43,7 @@ public class OwnedCardView extends BaseView {
 
         OwnedCardDataProvider dataProvider = new OwnedCardDataProvider(
             ownedCardService);
-        OwnedCardGrid ownedCardGrid = new OwnedCardGrid(dataProvider, c -> {});
+        OwnedCardGrid ownedCardGrid = new OwnedCardGrid(dataProvider, c -> {}, ownedCardValueService);
         layout.add(ownedCardGrid);
 
         //Setup create new card

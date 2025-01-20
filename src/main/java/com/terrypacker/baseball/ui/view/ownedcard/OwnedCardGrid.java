@@ -1,31 +1,43 @@
 package com.terrypacker.baseball.ui.view.ownedcard;
 
+import com.terrypacker.baseball.entity.cardvalue.OwnedCardValue;
 import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
+import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.ui.ValidationMessage;
 import com.terrypacker.baseball.ui.view.AbstractFilteredGrid;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import java.text.NumberFormat;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Terry Packer
  */
 public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilter> {
 
+    private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+
     private OwnedCardDataProvider dataProvider;
+    private OwnedCardValueService ownedCardValueService;
 
     private Grid.Column<OwnedCard> baseballCard;
     private Grid.Column<OwnedCard> cardIdentifierColumn;
     private Grid.Column<OwnedCard> notesColumn;
+    private Grid.Column<OwnedCard> latestValueColumn;
 
-    public OwnedCardGrid(OwnedCardDataProvider dataProvider, Consumer<OwnedCard> onSelected) {
+    public OwnedCardGrid(OwnedCardDataProvider dataProvider, Consumer<OwnedCard> onSelected,
+        OwnedCardValueService ownedCardValueService) {
         super(dataProvider.withConfigurableFilter(), new OwnedCardFilter(dataProvider), onSelected);
         this.dataProvider = dataProvider;
+        this.ownedCardValueService = ownedCardValueService;
         setupColumns();
         setupFiltering();
         setupEditing();
@@ -44,6 +56,22 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
             .setHeader("Notes")
             .setSortable(true)
             .setSortProperty("notes");
+        this.latestValueColumn = addComponentColumn(owned -> {
+            try {
+                Mono<OwnedCardValue> result = ownedCardValueService.getOwnedCardValue(owned);
+                OwnedCardValue ownedCardValue = result.block();
+                return new Text(currencyFormat.format(ownedCardValue.getValueInCents() / 100D));
+            }catch(NoSuchElementException e) {
+                return new Text("No value found");
+            }
+        }).setHeader("Value").setSortable(false);
+        /**
+         * TODO add a latest value to the OwnedCard
+        this.getListDataView().addItemCountChangeListener(event -> {
+            this.getListDataView().getItems().mapToDouble()
+            this.latestValueColumn.setFooter("Total: " + currencyFormat.format(totalValue));
+        });
+         **/
     }
 
     protected void setupFiltering() {

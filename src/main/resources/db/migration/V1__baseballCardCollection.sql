@@ -22,10 +22,11 @@ CREATE TABLE ownedCard(
 
 CREATE TABLE ownedCardValue (
     ownedCardId INT NOT NULL,
-    grade VARCHAR(255),
+    grade DOUBLE PRECISION,
     value BIGINT,
     time TIMESTAMP,
-    CONSTRAINT ownedCardFk1 FOREIGN KEY (ownedCardId) REFERENCES ownedCard(id) ON DELETE CASCADE
+    CONSTRAINT ownedCardValueFk1 FOREIGN KEY (ownedCardId) REFERENCES ownedCard(id) ON DELETE CASCADE,
+    CONSTRAINT ownedCardValueUnique UNIQUE (ownedCardId, time)
 );
 
 CREATE TABLE applicationUser(

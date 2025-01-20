@@ -2,6 +2,7 @@ package com.terrypacker.baseball.ui.view.collection;
 
 import com.terrypacker.baseball.service.BaseballCardService;
 import com.terrypacker.baseball.service.OwnedCardService;
+import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.service.SecurityService;
 import com.terrypacker.baseball.ui.view.BaseView;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardDataProvider;
@@ -31,13 +32,17 @@ public class CollectionView extends BaseView {
 
     private final BaseballCardService baseballCardService;
     private final OwnedCardService ownedCardService;
+    private final OwnedCardValueService ownedCardValueService;
 
     public CollectionView(
-        @Autowired BaseballCardService baseballCardService, SecurityService securityService,
-        OwnedCardService ownedCardService) {
+        @Autowired BaseballCardService baseballCardService,
+        SecurityService securityService,
+        OwnedCardService ownedCardService,
+        OwnedCardValueService ownedCardValueService) {
         super(TITLE, TAB_ID, securityService);
         this.baseballCardService = baseballCardService;
         this.ownedCardService = ownedCardService;
+        this.ownedCardValueService = ownedCardValueService;
     }
 
     @PostConstruct
@@ -58,7 +63,7 @@ public class CollectionView extends BaseView {
         layout.add(header);
 
         OwnedCardDataProvider ownedCardDataProvider = new OwnedCardDataProvider(ownedCardService);
-        OwnedCardGrid ownedCardGrid = new OwnedCardGrid(ownedCardDataProvider, c -> {});
+        OwnedCardGrid ownedCardGrid = new OwnedCardGrid(ownedCardDataProvider, c -> {}, ownedCardValueService);
 
         BaseballCardDataProvider baseballCardDataProvider = new BaseballCardDataProvider(
             baseballCardService);

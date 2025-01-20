@@ -7,6 +7,8 @@ terrypacker:
       data-file: classpath:/config/cards.csv
       owned:
         data-file: classpath:/config/ownedCards.csv
+      value:
+        data-file: classpath:/config/cardValues.csv
 spring:
   h2:
     console:

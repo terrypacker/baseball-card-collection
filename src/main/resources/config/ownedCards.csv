@@ -1,4 +1,4 @@
-id,ownedCardId,cardIdentifier,notes
-1,1,NR-1,
-2,1,NR-2,
-3,1,NR-3,
+id,baseballCardId,cardIdentifier,notes
+1,1,NR-1,Rookie Card
+2,1,NR-2,Rookie Card
+3,1,NR-3,Rookie Card
