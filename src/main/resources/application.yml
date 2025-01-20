@@ -5,6 +5,8 @@ terrypacker:
   baseball:
     card:
       data-file: classpath:/config/cards.csv
+      owned:
+        data-file: classpath:/config/ownedCards.csv
 spring:
   h2:
     console:

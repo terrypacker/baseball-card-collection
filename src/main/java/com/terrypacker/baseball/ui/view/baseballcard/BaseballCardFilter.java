@@ -1,6 +1,7 @@
-package com.terrypacker.baseball.ui.view.collection;
+package com.terrypacker.baseball.ui.view.baseballcard;
 
 import com.terrypacker.baseball.db.tables.Baseballcard;
+import com.terrypacker.baseball.repository.EntityFilter;
 import com.terrypacker.baseball.repository.Filter;
 import com.terrypacker.baseball.repository.Filter.Matcher;
 import com.terrypacker.baseball.repository.PropertyIntegerFilter;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * @author Terry Packer
  */
-public class BaseballCardFilter {
+public class BaseballCardFilter implements EntityFilter {
 
     private final BaseballCardDataProvider dataProvider;
     private final List<Filter> filters = new ArrayList<>();

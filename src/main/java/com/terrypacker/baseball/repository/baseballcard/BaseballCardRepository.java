@@ -1,30 +1,9 @@
 package com.terrypacker.baseball.repository.baseballcard;
 
 import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
-import com.terrypacker.baseball.ui.view.collection.BaseballCardFilter;
-import java.util.Optional;
-import java.util.stream.Stream;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 
 public interface BaseballCardRepository extends ReactiveSortingRepository<BaseballCard, Integer>,
     ReactiveCrudRepository<BaseballCard, Integer> {
-
-
-  /**
-   * TODO Fix to use Seek
-   *
-   * @param filter
-   * @param sort
-   * @param limit
-   * @param offset
-   * @return
-   */
-    Stream<BaseballCard> query(Optional<BaseballCardFilter> filter, Sort sort,
-        int limit, int offset);
-
-    int countQuery(Optional<BaseballCardFilter> filter);
-
-
 }

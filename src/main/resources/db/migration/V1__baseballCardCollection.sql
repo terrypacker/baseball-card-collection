@@ -11,12 +11,21 @@ CREATE TABLE baseballCard(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE baseballCardValue (
-    baseballCardId INT NOT NULL,
+CREATE TABLE ownedCard(
+     id SERIAL,
+     baseballCardId INT NOT NULL,
+     cardIdentifier VARCHAR(255),
+     notes TEXT,
+     PRIMARY KEY (id),
+     CONSTRAINT ownedCardFk1 FOREIGN KEY (baseballCardId) references baseballCard(id) ON DELETE CASCADE
+);
+
+CREATE TABLE ownedCardValue (
+    ownedCardId INT NOT NULL,
     grade VARCHAR(255),
     value BIGINT,
     time TIMESTAMP,
-    CONSTRAINT baseballCardValueFk1 FOREIGN KEY (baseballCardId) REFERENCES baseballCard(id) ON DELETE CASCADE
+    CONSTRAINT ownedCardFk1 FOREIGN KEY (ownedCardId) REFERENCES ownedCard(id) ON DELETE CASCADE
 );
 
 CREATE TABLE applicationUser(

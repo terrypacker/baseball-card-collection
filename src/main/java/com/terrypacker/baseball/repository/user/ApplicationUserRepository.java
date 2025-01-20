@@ -5,6 +5,7 @@ import com.terrypacker.baseball.db.tables.records.ApplicationuserRecord;
 import com.terrypacker.baseball.entity.user.ApplicationUser;
 import com.terrypacker.baseball.repository.JooqRepository;
 import com.terrypacker.baseball.service.SecurityService;
+import com.terrypacker.baseball.ui.view.user.UserFilter;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import reactor.core.publisher.Mono;
  */
 @Repository
 public class ApplicationUserRepository extends
-    JooqRepository<Applicationuser, ApplicationUser, ApplicationuserRecord> implements UserDetailsService {
+    JooqRepository<Applicationuser, ApplicationUser, ApplicationuserRecord, UserFilter> implements UserDetailsService {
 
     private final SecurityService securityService;
 

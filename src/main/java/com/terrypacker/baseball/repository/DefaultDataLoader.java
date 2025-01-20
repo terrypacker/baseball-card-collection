@@ -1,11 +1,14 @@
 package com.terrypacker.baseball.repository;
 
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.csv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
-import com.terrypacker.baseball.entity.baseballcard.BaseballCardBuilder;
+import com.terrypacker.baseball.entity.baseballcard.BaseballCardCsvMappingStrategy;
+import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
+import com.terrypacker.baseball.entity.ownedcard.OwnedCardCsvMappingStrategy;
 import com.terrypacker.baseball.entity.user.ApplicationUser;
 import com.terrypacker.baseball.repository.baseballcard.BaseballCardRepository;
+import com.terrypacker.baseball.repository.ownedcard.OwnedCardRepository;
 import com.terrypacker.baseball.repository.user.ApplicationUserRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,14 +29,20 @@ public class DefaultDataLoader implements ApplicationListener<ContextRefreshedEv
 
     private final Resource cardDataFile;
     private final BaseballCardRepository cardRepository;
+    private final Resource ownedCardDataFile;
+    private final OwnedCardRepository ownedCardRepository;
     private final ApplicationUserRepository applicationUserRepository;
 
     public DefaultDataLoader(BaseballCardRepository baseballCardRepository,
-        ApplicationUserRepository applicationUserRepository,
-        @Value("${terrypacker.baseball.card.data-file}") Resource cardDataFile) {
+        @Value("${terrypacker.baseball.card.data-file}") Resource cardDataFile,
+        OwnedCardRepository ownedCardRepository,
+        @Value("${terrypacker.baseball.card.owned.data-file}") Resource ownedCardDataFile,
+        ApplicationUserRepository applicationUserRepository) {
         this.cardRepository = baseballCardRepository;
-        this.applicationUserRepository = applicationUserRepository;
         this.cardDataFile = cardDataFile;
+        this.ownedCardRepository = ownedCardRepository;
+        this.ownedCardDataFile = ownedCardDataFile;
+        this.applicationUserRepository = applicationUserRepository;
     }
 
     @Override
@@ -51,35 +60,39 @@ public class DefaultDataLoader implements ApplicationListener<ContextRefreshedEv
             if (this.cardRepository.count().block() > 0L) {
                 return;
             }
-            Reader reader = new BufferedReader(
-                new InputStreamReader(cardDataFile.getInputStream()));
-            CSVReader csvReader = new CSVReader(reader);
-            Iterator<ICommonsList<String>> it = csvReader.iterator();
-            ICommonsList<String> headers = it.next();
-            // Ensure the headers match:
-            if (!"playerName".equals(headers.get(0)) ||
-                !"teamName".equals(headers.get(1)) ||
-                !"brand".equals(headers.get(2)) ||
-                !"cardNumber".equals(headers.get(3)) ||
-                !"year".equals(headers.get(4)) ||
-                !"notes".equals(headers.get(5))
-            ) {
-                throw new RuntimeException("Invalid card file at " + cardDataFile);
-            }
-            while (it.hasNext()) {
-                ICommonsList<String> row = it.next();
-                if (row.size() != 6) {
-                    throw new RuntimeException("Invalid format for staff file at" + cardDataFile);
+
+            //Insert Cards from CSV
+            try (Reader cardReader = new BufferedReader(
+                new InputStreamReader(cardDataFile.getInputStream()));) {
+                CsvToBean<BaseballCard> csvReader =
+                    new CsvToBeanBuilder(cardReader).withMappingStrategy(new BaseballCardCsvMappingStrategy())
+                        .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withIgnoreEmptyLine(true)
+                        .build();
+
+                Iterator<BaseballCard> it = csvReader.iterator();
+                while (it.hasNext()) {
+                    BaseballCard card = it.next();
+                    card.setId(null);
+                    this.cardRepository.save(card).block();
                 }
-                BaseballCard card = BaseballCardBuilder.get()
-                    .setPlayerName(row.get(0))
-                    .setTeamName(row.get(1))
-                    .setBrand(row.get(2))
-                    .setCardNumber(Integer.parseInt(row.get(3)))
-                    .setYear(Integer.parseInt(row.get(4)))
-                    .setNotes(row.get(5)).build();
-                this.cardRepository.save(card).block();
             }
+
+            //Insert Owned from CSV
+            try (Reader cardReader = new BufferedReader(
+                new InputStreamReader(ownedCardDataFile.getInputStream()));) {
+                CsvToBean<OwnedCard> csvReader =
+                    new CsvToBeanBuilder(cardReader).withMappingStrategy(new OwnedCardCsvMappingStrategy())
+                        .withSeparator(',').withIgnoreLeadingWhiteSpace(true).withIgnoreEmptyLine(true)
+                        .build();
+
+                Iterator<OwnedCard> it = csvReader.iterator();
+                while (it.hasNext()) {
+                    OwnedCard card = it.next();
+                    card.setId(null);
+                    this.ownedCardRepository.save(card).block();
+                }
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
