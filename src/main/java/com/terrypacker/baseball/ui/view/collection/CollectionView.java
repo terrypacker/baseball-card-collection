@@ -4,7 +4,8 @@ import com.terrypacker.baseball.service.BaseballCardService;
 import com.terrypacker.baseball.service.OwnedCardService;
 import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.service.SecurityService;
-import com.terrypacker.baseball.ui.view.BaseView;
+import com.terrypacker.baseball.ui.view.AbstractView;
+import com.terrypacker.baseball.ui.view.ViewUtils;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardDataProvider;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardEditor;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardGrid;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @PermitAll
 @Route("/collection")
-public class CollectionView extends BaseView {
+public class CollectionView extends AbstractView {
 
     public static final String TITLE = "Collection";
     public static final String TAB_ID = "collection";
@@ -35,11 +36,13 @@ public class CollectionView extends BaseView {
     private final OwnedCardValueService ownedCardValueService;
 
     public CollectionView(
+        @Autowired CollectionViewDefinition collectionViewDefinition,
+        @Autowired ViewUtils viewUtils,
+        @Autowired SecurityService securityService,
         @Autowired BaseballCardService baseballCardService,
-        SecurityService securityService,
-        OwnedCardService ownedCardService,
-        OwnedCardValueService ownedCardValueService) {
-        super(TITLE, TAB_ID, securityService);
+        @Autowired OwnedCardService ownedCardService,
+        @Autowired OwnedCardValueService ownedCardValueService) {
+        super(collectionViewDefinition, securityService, viewUtils);
         this.baseballCardService = baseballCardService;
         this.ownedCardService = ownedCardService;
         this.ownedCardValueService = ownedCardValueService;

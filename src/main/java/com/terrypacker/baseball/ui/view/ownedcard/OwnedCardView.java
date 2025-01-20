@@ -3,7 +3,8 @@ package com.terrypacker.baseball.ui.view.ownedcard;
 import com.terrypacker.baseball.service.OwnedCardService;
 import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.service.SecurityService;
-import com.terrypacker.baseball.ui.view.BaseView;
+import com.terrypacker.baseball.ui.view.AbstractView;
+import com.terrypacker.baseball.ui.view.ViewUtils;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -16,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @PermitAll
 @Route("/owned")
-public class OwnedCardView extends BaseView {
+public class OwnedCardView extends AbstractView {
 
     public static final String TITLE = "Owned Cards";
     public static final String TAB_ID = "owned";
@@ -25,9 +26,12 @@ public class OwnedCardView extends BaseView {
     private final OwnedCardValueService ownedCardValueService;
 
     public OwnedCardView(
-        @Autowired OwnedCardService ownedCardService, SecurityService securityService,
-        OwnedCardValueService ownedCardValueService) {
-        super(TITLE, TAB_ID, securityService);
+        @Autowired OwnedCardService ownedCardService,
+        @Autowired OwnedCardViewDefinition ownedCardViewDefinition,
+        @Autowired SecurityService securityService,
+        @Autowired ViewUtils viewUtils,
+        @Autowired OwnedCardValueService ownedCardValueService) {
+        super(ownedCardViewDefinition, securityService, viewUtils);
         this.ownedCardService = ownedCardService;
         this.ownedCardValueService = ownedCardValueService;
     }
