@@ -16,6 +16,7 @@ import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.Query;
 import java.text.NumberFormat;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -34,6 +35,7 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
 
     private Grid.Column<OwnedCard> baseballCard;
     private Grid.Column<OwnedCard> cardIdentifierColumn;
+    private Grid.Column<OwnedCard> lotColumn;
     private Grid.Column<OwnedCard> notesColumn;
     private Grid.Column<OwnedCard> latestValueColumn;
 
@@ -56,11 +58,15 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
         })
             .setHeader("Card")
             .setSortable(true)
-            .setSortProperty("ownedCardId");
+            .setSortProperty("baseballCardId");
         this.cardIdentifierColumn = addColumn(OwnedCard::getCardIdentifier)
             .setHeader("Card Identifier")
             .setSortable(true)
             .setSortProperty("cardIdentifier");
+        this.lotColumn = addColumn(OwnedCard::getLot)
+            .setHeader("Lot")
+            .setSortable(true)
+            .setSortProperty("lot");
         this.notesColumn = addColumn(OwnedCard::getNotes)
             .setHeader("Notes")
             .setSortable(true)
@@ -74,23 +80,35 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
                 return new Text("No value found");
             }
         }).setHeader("Value").setSortable(false);
-        /**
-         * TODO add a latest value to the OwnedCard
-        this.getListDataView().addItemCountChangeListener(event -> {
-            this.getListDataView().getItems().mapToDouble()
-            this.latestValueColumn.setFooter("Total: " + currencyFormat.format(totalValue));
+
+        //Add a total footer and make sure it stays in sync
+        computeTotalFooter();
+        this.getDataProvider().addDataProviderListener(event -> {
+            computeTotalFooter();
         });
-         **/
+    }
+
+    private void computeTotalFooter() {
+        Double totalValue = this.getDataProvider().fetch(new Query<>()).mapToDouble(c -> {
+            try {
+                Mono<OwnedCardValue> result = ownedCardValueService.getLatestOwnedCardValue(c);
+                OwnedCardValue ownedCardValue = result.block();
+                return ownedCardValue.getValueInCents() / 100D;
+            }catch(NoSuchElementException e) {
+                return 0.0D;
+            }
+        }).reduce(0.0, Double::sum);
+        this.latestValueColumn.setFooter("Current Value: " + currencyFormat.format(totalValue));
     }
 
     protected void setupFiltering() {
         //Setup filtering
         getHeaderRows().clear();
         HeaderRow headerRow = appendHeaderRow();
-        headerRow.getCell(baseballCard).setComponent(
-            createFilterHeader("Card", null));
         headerRow.getCell(cardIdentifierColumn).setComponent(
             createFilterHeader("Card Identifier", filter::setCardIdentifier));
+        headerRow.getCell(lotColumn).setComponent(
+            createFilterHeader("Lot", filter::setLot));
         headerRow.getCell(notesColumn).setComponent(
             createFilterHeader("Notes", filter::setNotes));
     }

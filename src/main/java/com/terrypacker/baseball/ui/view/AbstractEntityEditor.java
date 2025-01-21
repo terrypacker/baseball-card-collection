@@ -16,8 +16,5 @@ public abstract class AbstractEntityEditor<E extends IdEntity, S extends Abstrac
     public AbstractEntityEditor(S service, Consumer<E> postSave) {
         this.service = service;
         this.postSave = postSave;
-        this.init();
     }
-
-    protected abstract void init();
 }

@@ -9,6 +9,7 @@ import com.terrypacker.baseball.ui.view.ownedcard.OwnedCardFilter;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Terry Packer
@@ -23,11 +24,18 @@ public class OwnedCardJooqRepository extends
     }
 
     @Override
+    public Flux<OwnedCard> getOwnedCardsByBaseballCardId(int baseballCardId) {
+        return Flux.fromStream(
+            create.fetchStream(table, table.BASEBALLCARDID.eq(baseballCardId)).map(this::unmapFromRecord));
+    }
+
+    @Override
     protected OwnedCard unmapFromRecord(OwnedcardRecord record) {
         return OwnedCardBuilder.get()
             .setId(record.getId())
             .setBaseballCardId(record.getBaseballcardid())
             .setCardIdentifier(record.getCardidentifier())
+            .setLot(record.getLot())
             .setNotes(record.getNotes())
             .build();
     }
@@ -38,6 +46,7 @@ public class OwnedCardJooqRepository extends
         record.setId(entity.getId());
         record.setBaseballcardid(entity.getBaseballCardId());
         record.setCardidentifier(entity.getCardIdentifier());
+        record.setLot(entity.getLot());
         record.setNotes(entity.getNotes());
         return record;
     }

@@ -12,7 +12,7 @@ public class OwnedCardCsvMappingStrategy extends
     AbstractCsvMappingStrategy<OwnedCard> {
 
     private static final String[] headers =
-        new String[]{"id", "baseballCardId", "cardIdentifier", "notes"};
+        new String[]{"id", "baseballCardId", "cardIdentifier", "lot", "notes"};
 
 
     @Override
@@ -27,7 +27,8 @@ public class OwnedCardCsvMappingStrategy extends
             .setId(Integer.parseInt(line[0]))
             .setBaseballCardId(Integer.parseInt(line[1]))
             .setCardIdentifier(line[2])
-            .setNotes(line[3]).build();
+            .setLot(line[3])
+            .setNotes(line[4]).build();
     }
 
     @Override
@@ -37,7 +38,8 @@ public class OwnedCardCsvMappingStrategy extends
         row[0] = Integer.toString(bean.getId());
         row[1] = Integer.toString(bean.getBaseballCardId());
         row[2] = bean.getCardIdentifier();
-        row[3] = bean.getNotes();
+        row[3] = bean.getLot();
+        row[4] = bean.getNotes();
         return row;
     }
 }

@@ -1,16 +1,29 @@
 package com.terrypacker.baseball.ui.view.baseballcard;
 
 import com.terrypacker.baseball.entity.baseballcard.BaseballCard;
-import com.vaadin.flow.component.virtuallist.VirtualList;
-import java.util.function.Consumer;
+import com.terrypacker.baseball.service.BaseballCardService;
+import com.vaadin.flow.component.combobox.ComboBox;
 
 /**
  * @author Terry Packer
  */
-public class BaseballCardSelect extends VirtualList<BaseballCard> {
+public class BaseballCardSelect extends ComboBox<BaseballCard> {
 
-    public BaseballCardSelect(BaseballCardDataProvider dataProvider, Consumer<BaseballCard> selectListener) {
-        this.setDataProvider(dataProvider);
-        this.setRenderer(new BaseballCardRenderer(c -> new BaseballCardTile(c, selectListener, false)));
+    private final BaseballCardDataProvider dataProvider;
+    private final BaseballCardFilter filter;
+
+    public BaseballCardSelect(BaseballCardService service) {
+        this.dataProvider = new BaseballCardDataProvider(service);
+        this.filter = new BaseballCardFilter(dataProvider);
+        BaseballCardFilter filter = new BaseballCardFilter(dataProvider);
+        setDataProvider(dataProvider, filterText -> {
+            filter.setPlayerName(filterText);
+            dataProvider.setFilter(filter);
+            return null;
+        });
+        setItemLabelGenerator(card -> {
+            return card.getPlayerName() + " - " + card.getBrand() + " - " + card.getCardNumber() + " - " + card.getYear();
+        });
     }
+
 }

@@ -9,6 +9,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -32,6 +33,7 @@ public class BaseballCardGrid extends AbstractFilteredGrid<BaseballCard, Basebal
     private Grid.Column<BaseballCard> cardNumberColumn;
     private Grid.Column<BaseballCard> yearColumn;
     private Grid.Column<BaseballCard> notesColumn;
+    private Grid.Column<BaseballCard> ownedCardsColumn;
 
     public BaseballCardGrid(BaseballCardDataProvider dataProvider, Consumer<BaseballCard> onSelected) {
         super(dataProvider.withConfigurableFilter(), new BaseballCardFilter(dataProvider), onSelected);
@@ -66,6 +68,9 @@ public class BaseballCardGrid extends AbstractFilteredGrid<BaseballCard, Basebal
             .setHeader("Notes")
             .setSortable(true)
             .setSortProperty("notes");
+        this.ownedCardsColumn = addComponentColumn(c -> {
+            return new Span(String.valueOf((int)c.getOwnedCards().stream().count()));
+        }).setHeader("Owned Cards");
     }
 
     protected void setupFiltering() {

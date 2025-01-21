@@ -9,12 +9,14 @@ public class OwnedCard extends IdEntity {
     private Integer id;
     private Integer baseballCardId;
     private String cardIdentifier;
+    private String lot;
     private String notes;
 
-    public OwnedCard(Integer id, Integer baseballCardId, String cardIdentifier, String notes) {
+    public OwnedCard(Integer id, Integer baseballCardId, String cardIdentifier, String lot, String notes) {
         this.id = id;
         this.baseballCardId = baseballCardId;
         this.cardIdentifier = cardIdentifier;
+        this.lot = lot;
         this.notes = notes;
     }
 
@@ -41,6 +43,14 @@ public class OwnedCard extends IdEntity {
 
     public void setCardIdentifier(String cardIdentifier) {
         this.cardIdentifier = cardIdentifier;
+    }
+
+    public String getLot() {
+        return lot;
+    }
+
+    public void setLot(String lot) {
+        this.lot = lot;
     }
 
     public String getNotes() {

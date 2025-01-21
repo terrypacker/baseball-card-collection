@@ -21,6 +21,7 @@ public class OwnedCardFilter implements EntityFilter {
     private final PropertyIntegerFilter id;
     private final PropertyIntegerFilter baseballCardId;
     private final PropertyStringFilter cardIdentifier;
+    private final PropertyStringFilter lot;
     private final PropertyStringFilter notes;
 
     public OwnedCardFilter(OwnedCardDataProvider dataProvider) {
@@ -38,6 +39,10 @@ public class OwnedCardFilter implements EntityFilter {
         this.cardIdentifier.setField(Ownedcard.OWNEDCARD.CARDIDENTIFIER);
         this.cardIdentifier.setMatcher(Matcher.CONTAINS);
 
+        this.lot = new PropertyStringFilter();
+        this.lot.setField(Ownedcard.OWNEDCARD.LOT);
+        this.lot.setMatcher(Matcher.CONTAINS);
+
         this.notes = new PropertyStringFilter();
         this.notes.setField(Baseballcard.BASEBALLCARD.NOTES);
         this.notes.setMatcher(Matcher.CONTAINS);
@@ -45,6 +50,7 @@ public class OwnedCardFilter implements EntityFilter {
         this.filters.add(id);
         this.filters.add(baseballCardId);
         this.filters.add(cardIdentifier);
+        this.filters.add(lot);
         this.filters.add(notes);
     }
 
@@ -60,6 +66,11 @@ public class OwnedCardFilter implements EntityFilter {
 
     public void setCardIdentifier(String cardIdentifier) {
         this.cardIdentifier.setFilterValue(cardIdentifier);
+        this.dataProvider.setFilter(this);
+    }
+
+    public void setLot(String lot) {
+        this.lot.setFilterValue(lot);
         this.dataProvider.setFilter(this);
     }
 

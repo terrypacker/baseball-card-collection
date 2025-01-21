@@ -15,6 +15,7 @@ CREATE TABLE ownedCard(
      id SERIAL,
      baseballCardId INT NOT NULL,
      cardIdentifier VARCHAR(255),
+     lot VARCHAR(255),
      notes TEXT,
      PRIMARY KEY (id),
      CONSTRAINT ownedCardFk1 FOREIGN KEY (baseballCardId) references baseballCard(id) ON DELETE CASCADE

@@ -2,6 +2,8 @@ package com.terrypacker.baseball.entity.baseballcard;
 
 
 import com.terrypacker.baseball.entity.IdEntity;
+import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
+import java.util.List;
 
 public class BaseballCard extends IdEntity {
 
@@ -11,10 +13,11 @@ public class BaseballCard extends IdEntity {
     private int cardNumber;
     private int year;
     private String notes;
+    private List<OwnedCard> ownedCards;
 
     public BaseballCard(Integer id, String playerName, String teamName, String brand,
         int cardNumber,
-        int year, String notes) {
+        int year, String notes, List<OwnedCard> ownedCards) {
         this.id = id;
         this.playerName = playerName;
         this.teamName = teamName;
@@ -22,6 +25,7 @@ public class BaseballCard extends IdEntity {
         this.cardNumber = cardNumber;
         this.year = year;
         this.notes = notes;
+        this.ownedCards = ownedCards;
     }
 
     public String getPlayerName() {
@@ -70,6 +74,14 @@ public class BaseballCard extends IdEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public List<OwnedCard> getOwnedCards() {
+        return ownedCards;
+    }
+
+    public void setOwnedCards(List<OwnedCard> ownedCards) {
+        this.ownedCards = ownedCards;
     }
 
     @Override

@@ -5,6 +5,7 @@ public class OwnedCardBuilder {
     private Integer id;
     private int baseballCardId;
     private String cardIdentifier;
+    private String lot;
     private String notes;
 
     public static OwnedCardBuilder get() {return new OwnedCardBuilder();}
@@ -24,12 +25,17 @@ public class OwnedCardBuilder {
         return this;
     }
 
+    public OwnedCardBuilder setLot(String lot) {
+        this.lot = lot;
+        return this;
+    }
+
     public OwnedCardBuilder setNotes(String notes) {
         this.notes = notes;
         return this;
     }
 
     public OwnedCard build() {
-        return new OwnedCard(id, baseballCardId, cardIdentifier, notes);
+        return new OwnedCard(id, baseballCardId, cardIdentifier, lot, notes);
     }
 }

@@ -1,4 +1,4 @@
-id,baseballCardId,cardIdentifier,notes
-1,1,NR-1,Rookie Card
-2,1,NR-2,Rookie Card
-3,1,NR-3,Rookie Card
+id,baseballCardId,cardIdentifier,lot,notes
+1,1,NR-1,Lot-TP-2024,Rookie Card
+2,1,NR-2,Lot-TP-2024,Rookie Card
+3,1,NR-3,Lot-TP-2024,Rookie Card

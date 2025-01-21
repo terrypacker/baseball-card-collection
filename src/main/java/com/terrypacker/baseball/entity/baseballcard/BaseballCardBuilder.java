@@ -1,5 +1,8 @@
 package com.terrypacker.baseball.entity.baseballcard;
 
+import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
+import java.util.List;
+
 public class BaseballCardBuilder {
 
     private Integer id;
@@ -9,6 +12,7 @@ public class BaseballCardBuilder {
     private int cardNumber;
     private int year;
     private String notes;
+    private List<OwnedCard> ownedCards;
 
     public static BaseballCardBuilder get() {
         return new BaseballCardBuilder();
@@ -49,7 +53,12 @@ public class BaseballCardBuilder {
         return this;
     }
 
+    public BaseballCardBuilder setOwnedCards(List<OwnedCard> ownedCards) {
+        this.ownedCards = ownedCards;
+        return this;
+    }
+
     public BaseballCard build() {
-        return new BaseballCard(id, playerName, teamName, brand, cardNumber, year, notes);
+        return new BaseballCard(id, playerName, teamName, brand, cardNumber, year, notes, ownedCards);
     }
 }

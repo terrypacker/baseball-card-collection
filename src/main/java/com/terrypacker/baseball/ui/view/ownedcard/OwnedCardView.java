@@ -24,9 +24,11 @@ import com.terrypacker.baseball.ui.view.AbstractView;
 import com.terrypacker.baseball.ui.view.ViewUtils;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardDataProvider;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardFilter;
-import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardSelect;
+import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardVirtualList;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -92,7 +94,7 @@ public class OwnedCardView extends AbstractView {
             populateChart(chart, new Series<>("Value", coordinates.toArray(new OwnedCardValueCoordinate[coordinates.size()])));
         }, ownedCardValueService, baseballCardService);
 
-        BaseballCardSelect cardSelect = new BaseballCardSelect(baseballCardDataProvider, selected -> {
+        BaseballCardVirtualList cardSelect = new BaseballCardVirtualList(baseballCardDataProvider, selected -> {
             ownedCardGrid.getFilter().setBaseballCardId(selected.getId());
         });
         TextField nameFilter = new TextField("Search by name");
@@ -103,17 +105,25 @@ public class OwnedCardView extends AbstractView {
         });
         layout.add(nameFilter);
         layout.add(cardSelect);
-        layout.add(new H2("Owned Cards"));
+        HorizontalLayout tableHeader = new HorizontalLayout();
+        tableHeader.add(new H2("Owned Cards"));
+        Button addButton = new Button("Add Owned Card");
+        addButton.addClickListener(event -> {
+            Dialog dialog = new Dialog();
+            dialog.setHeaderTitle("Add Owned Card");
+            OwnedCardEditor editor = new OwnedCardEditor(ownedCardService, baseballCardService, oc -> {
+                ownedCardGrid.getDataProvider().refreshItem(oc);
+                dialog.close();
+            });
+            dialog.add(editor);
+            dialog.setWidth("75%%");
+            dialog.open();
+        });
+        tableHeader.add(addButton);
+        layout.add(tableHeader);
         layout.add(ownedCardGrid);
 
         layout.add(chart);
-
-        //Setup create new card
-        layout.add(new Hr());
-        OwnedCardEditor editor = new OwnedCardEditor(ownedCardService, oc -> {
-            ownedCardGrid.getDataProvider().refreshItem(oc);
-        });
-        layout.add(editor);
     }
 
     private void populateChart(ApexCharts chart, Series<OwnedCardValueCoordinate> yValues) {
@@ -136,7 +146,7 @@ public class OwnedCardView extends AbstractView {
                 ).build())
             .withDataLabels(DataLabelsBuilder.get()
                 .withEnabled(false)
-                .build())
+                .build()) //Add Grade into label
             .withSeries(new Series<>())
             .withXaxis(XAxisBuilder.get()
                 .withLabels(com.github.appreciated.apexcharts.config.xaxis.builder.LabelsBuilder.get().withFormatter("function(val) {return val;}").build())

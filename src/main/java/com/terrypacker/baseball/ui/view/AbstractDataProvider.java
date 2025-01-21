@@ -81,4 +81,8 @@ public abstract class AbstractDataProvider<E extends IdEntity, F extends EntityF
         }
         return sort;
     }
+
+    public S getService() {
+        return service;
+    }
 }

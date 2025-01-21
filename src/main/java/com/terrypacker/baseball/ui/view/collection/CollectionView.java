@@ -7,12 +7,10 @@ import com.terrypacker.baseball.service.SecurityService;
 import com.terrypacker.baseball.ui.view.AbstractView;
 import com.terrypacker.baseball.ui.view.ViewUtils;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardDataProvider;
-import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardEditor;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardGrid;
 import com.terrypacker.baseball.ui.view.ownedcard.OwnedCardDataProvider;
 import com.terrypacker.baseball.ui.view.ownedcard.OwnedCardGrid;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -75,15 +73,5 @@ public class CollectionView extends AbstractView {
             ownedCardGrid.getFilter().setBaseballCardId(card.getId());
         });
         layout.add(grid);
-
-        //Setup Owned Grid
-        layout.add(ownedCardGrid);
-
-        //Setup create new card
-        layout.add(new Hr());
-        BaseballCardEditor editor = new BaseballCardEditor(baseballCardService, c -> {
-            grid.getDataProvider().refreshItem(c);
-        });
-        layout.add(editor);
     }
 }

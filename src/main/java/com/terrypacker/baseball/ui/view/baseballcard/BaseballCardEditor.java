@@ -25,9 +25,9 @@ public class BaseballCardEditor extends AbstractEntityEditor<BaseballCard, Baseb
     public BaseballCardEditor(BaseballCardService service,
         Consumer<BaseballCard> postSave) {
         super(service, postSave);
+        init();
     }
 
-    @Override
     protected void init() {
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
         List<Integer> selectableYears = IntStream
@@ -53,7 +53,7 @@ public class BaseballCardEditor extends AbstractEntityEditor<BaseballCard, Baseb
         Button addCardButton = new Button("Add Card");
         addCardButton.addClickListener(event -> {
             BaseballCard card = new BaseballCard(null, playerName.getValue(), teamName.getValue(),
-                brand.getValue(), cardNumber.getValue(), year.getValue(), notes.getValue());
+                brand.getValue(), cardNumber.getValue(), year.getValue(), notes.getValue(), null);
             Mono<BaseballCard> save = service.save(card);
             BaseballCard result = save.block();
             postSave.accept(result);
