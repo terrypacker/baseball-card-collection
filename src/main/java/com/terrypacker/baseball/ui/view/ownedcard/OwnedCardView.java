@@ -20,6 +20,7 @@ import com.terrypacker.baseball.service.BaseballCardService;
 import com.terrypacker.baseball.service.OwnedCardService;
 import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.service.SecurityService;
+import com.terrypacker.baseball.service.ebay.EbayBrowseService;
 import com.terrypacker.baseball.ui.view.AbstractView;
 import com.terrypacker.baseball.ui.view.ViewUtils;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardDataProvider;
@@ -55,18 +56,22 @@ public class OwnedCardView extends AbstractView {
     private final OwnedCardService ownedCardService;
     private final OwnedCardValueService ownedCardValueService;
     private final BaseballCardService baseballCardService;
+    private final EbayBrowseService ebayBrowseService;
 
+    @Autowired
     public OwnedCardView(
-        @Autowired OwnedCardService ownedCardService,
-        @Autowired OwnedCardViewDefinition ownedCardViewDefinition,
-        @Autowired SecurityService securityService,
-        @Autowired ViewUtils viewUtils,
-        @Autowired OwnedCardValueService ownedCardValueService,
-        BaseballCardService baseballCardService) {
+         OwnedCardService ownedCardService,
+         OwnedCardViewDefinition ownedCardViewDefinition,
+         SecurityService securityService,
+         ViewUtils viewUtils,
+         OwnedCardValueService ownedCardValueService,
+         BaseballCardService baseballCardService,
+         EbayBrowseService ebayBrowseService) {
         super(ownedCardViewDefinition, securityService, viewUtils);
         this.ownedCardService = ownedCardService;
         this.ownedCardValueService = ownedCardValueService;
         this.baseballCardService = baseballCardService;
+        this.ebayBrowseService = ebayBrowseService;
     }
 
     @PostConstruct
@@ -92,7 +97,7 @@ public class OwnedCardView extends AbstractView {
                 coordinates.add(new OwnedCardValueCoordinate(ownedCardValue.getTimestamp(), ownedCardValue.getValueInCents()/100D));
             }
             populateChart(chart, new Series<>("Value", coordinates.toArray(new OwnedCardValueCoordinate[coordinates.size()])));
-        }, ownedCardValueService, baseballCardService);
+        }, ownedCardValueService, baseballCardService, ebayBrowseService);
 
         BaseballCardVirtualList cardSelect = new BaseballCardVirtualList(baseballCardDataProvider, selected -> {
             ownedCardGrid.getFilter().setBaseballCardId(selected.getId());

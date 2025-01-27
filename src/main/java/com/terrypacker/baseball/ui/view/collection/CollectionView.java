@@ -4,6 +4,7 @@ import com.terrypacker.baseball.service.BaseballCardService;
 import com.terrypacker.baseball.service.OwnedCardService;
 import com.terrypacker.baseball.service.OwnedCardValueService;
 import com.terrypacker.baseball.service.SecurityService;
+import com.terrypacker.baseball.service.ebay.EbayBrowseService;
 import com.terrypacker.baseball.ui.view.AbstractView;
 import com.terrypacker.baseball.ui.view.ViewUtils;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardDataProvider;
@@ -32,18 +33,21 @@ public class CollectionView extends AbstractView {
     private final BaseballCardService baseballCardService;
     private final OwnedCardService ownedCardService;
     private final OwnedCardValueService ownedCardValueService;
+    private final EbayBrowseService ebayBrowseService;
 
+    @Autowired
     public CollectionView(
-        @Autowired CollectionViewDefinition collectionViewDefinition,
-        @Autowired ViewUtils viewUtils,
-        @Autowired SecurityService securityService,
-        @Autowired BaseballCardService baseballCardService,
-        @Autowired OwnedCardService ownedCardService,
-        @Autowired OwnedCardValueService ownedCardValueService) {
+        CollectionViewDefinition collectionViewDefinition,
+        ViewUtils viewUtils,
+        SecurityService securityService,
+        BaseballCardService baseballCardService,
+        OwnedCardService ownedCardService,
+        OwnedCardValueService ownedCardValueService, EbayBrowseService ebayBrowseService) {
         super(collectionViewDefinition, securityService, viewUtils);
         this.baseballCardService = baseballCardService;
         this.ownedCardService = ownedCardService;
         this.ownedCardValueService = ownedCardValueService;
+        this.ebayBrowseService = ebayBrowseService;
     }
 
     @PostConstruct
@@ -65,7 +69,7 @@ public class CollectionView extends AbstractView {
 
         OwnedCardDataProvider ownedCardDataProvider = new OwnedCardDataProvider(ownedCardService);
         OwnedCardGrid ownedCardGrid = new OwnedCardGrid(ownedCardDataProvider, c -> {},
-            ownedCardValueService, baseballCardService);
+            ownedCardValueService, baseballCardService, ebayBrowseService);
 
         BaseballCardDataProvider baseballCardDataProvider = new BaseballCardDataProvider(
             baseballCardService);

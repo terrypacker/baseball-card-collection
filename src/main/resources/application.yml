@@ -1,7 +1,4 @@
 terrypacker:
-  ebay:
-    api:
-      baseUrl: https://api.ebay.com
   baseball:
     card:
       data-file: classpath:/config/cards.csv
@@ -24,3 +21,18 @@ spring:
     default-schema: baseball-card-collection
 server:
   port: 8081
+#EBay Connectivity
+ebay:
+  production: true
+  api.sandbox.ebay.com:
+    browse-url: https://api.sandbox.ebay.com/buy/browse/v1
+    appid:
+    certid:
+    devid:
+    redirecturi:
+  api.ebay.com:
+    browse-url: https://api.ebay.com/buy/browse/v1
+    appid:
+    certid:
+    devid:
+    redirecturi:

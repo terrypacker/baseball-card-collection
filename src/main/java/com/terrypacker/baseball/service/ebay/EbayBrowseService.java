@@ -1,18 +1,25 @@
 package com.terrypacker.baseball.service.ebay;
 
+import com.ebay.api.client.auth.oauth2.model.AccessToken;
 import com.terrypacker.ebay.browse.ApiClient;
 import com.terrypacker.ebay.browse.api.ItemSummaryApi;
 import com.terrypacker.ebay.browse.models.SearchPagedCollection;
-import org.springframework.beans.factory.annotation.Value;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Terry Packer
  */
+@Service
 public class EbayBrowseService {
+    private final EbayOauth2Helper ebayOauth2Helper;
     private final ApiClient browseApiClient;
-    public EbayBrowseService(@Value("terrypacker.ebay.api.baseurl") String ebayApiBaseUrl) {
+
+    public EbayBrowseService(@Autowired EbayOauth2Helper oauth2Helper) {
+        this.ebayOauth2Helper = oauth2Helper;
         this.browseApiClient = new ApiClient();
-        this.browseApiClient.setBasePath(ebayApiBaseUrl);
+        this.browseApiClient.setBasePath(ebayOauth2Helper.getBrowseBaseUrl());
     }
 
     /**
@@ -22,7 +29,9 @@ public class EbayBrowseService {
      * @param offset
      * @return
      */
-    public SearchPagedCollection browse(String query, int limit, int offset) {
+    public SearchPagedCollection browse(String query, int limit, int offset) throws IOException {
+        AccessToken token = ebayOauth2Helper.getAccessToken().get();
+        this.browseApiClient.setAccessToken(token.getToken());
         ItemSummaryApi itemSummaryApi = new ItemSummaryApi(browseApiClient);
         EbayItemSummarySearchQuery searchQuery = new EbayItemSummarySearchQuery(query, limit, offset);
 
@@ -70,7 +79,7 @@ public class EbayBrowseService {
 
 
         public EbayItemSummarySearchQuery(String query, Integer limit, Integer offset) {
-            this.filter = query;
+            this.q = query;
             if(limit != null) {
                 this.limit = limit.toString();
             }

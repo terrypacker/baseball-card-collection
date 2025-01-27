@@ -5,20 +5,27 @@ import com.terrypacker.baseball.entity.cardvalue.OwnedCardValue;
 import com.terrypacker.baseball.entity.ownedcard.OwnedCard;
 import com.terrypacker.baseball.service.BaseballCardService;
 import com.terrypacker.baseball.service.OwnedCardValueService;
+import com.terrypacker.baseball.service.ebay.EbayBrowseService;
 import com.terrypacker.baseball.ui.ValidationMessage;
 import com.terrypacker.baseball.ui.view.AbstractFilteredGrid;
 import com.terrypacker.baseball.ui.view.baseballcard.BaseballCardTile;
+import com.terrypacker.ebay.browse.models.ItemSummary;
+import com.terrypacker.ebay.browse.models.SearchPagedCollection;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.Query;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.NoSuchElementException;
+import java.util.OptionalDouble;
 import java.util.function.Consumer;
 import reactor.core.publisher.Mono;
 
@@ -32,6 +39,7 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
     private OwnedCardDataProvider dataProvider;
     private OwnedCardValueService ownedCardValueService;
     private BaseballCardService baseballCardService;
+    private EbayBrowseService ebayBrowseService;
 
     private Grid.Column<OwnedCard> baseballCard;
     private Grid.Column<OwnedCard> cardIdentifierColumn;
@@ -41,11 +49,13 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
 
     public OwnedCardGrid(OwnedCardDataProvider dataProvider, Consumer<OwnedCard> onSelected,
         OwnedCardValueService ownedCardValueService,
-        BaseballCardService baseballCardService) {
+        BaseballCardService baseballCardService,
+        EbayBrowseService ebayBrowseService) {
         super(dataProvider.withConfigurableFilter(), new OwnedCardFilter(dataProvider), onSelected);
         this.dataProvider = dataProvider;
         this.ownedCardValueService = ownedCardValueService;
         this.baseballCardService = baseballCardService;
+        this.ebayBrowseService = ebayBrowseService;
         setupColumns();
         setupFiltering();
         setupEditing();
@@ -80,6 +90,35 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
                 return new Text("No value found");
             }
         }).setHeader("Value").setSortable(false);
+
+        addComponentColumn( owned -> {
+            Button getValueButton = new Button("Get Value");
+            getValueButton.addClickListener(e -> {
+                BaseballCard card = baseballCardService.findById(owned.getBaseballCardId()).block();
+                String query = card.getPlayerName() + " " + card.getYear() + " " + card.getBrand();
+                try {
+                    SearchPagedCollection result = this.ebayBrowseService.browse(query, 5, 0);
+                    Dialog dialog = new Dialog("Results");
+                    dialog.setWidth("50%");
+                    Grid<ItemSummary> grid = new Grid<>(ItemSummary.class, false);
+                    grid.addColumn(ItemSummary::getTitle).setHeader("Title");
+                    Column<ItemSummary> priceColumn = grid.addColumn(summary -> {
+                        String value = summary.getPrice().getValue();
+                        return currencyFormat.format(Double.parseDouble(value));
+                    }).setHeader("Price").setSortable(true).setSortProperty("price");
+                    OptionalDouble avg = result.getItemSummaries().stream().mapToDouble(i -> Double.parseDouble(i.getPrice().getValue())).average();
+                    priceColumn.setFooter("Avg: " + currencyFormat.format(avg.getAsDouble()));
+
+                    grid.setItems(result.getItemSummaries());
+
+                    dialog.add(grid);
+                    dialog.open();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            return getValueButton;
+        });
 
         //Add a total footer and make sure it stays in sync
         computeTotalFooter();
