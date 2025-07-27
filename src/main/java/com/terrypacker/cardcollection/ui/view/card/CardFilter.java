@@ -1,7 +1,7 @@
-package com.terrypacker.cardcollection.ui.view.cardcollection;
+package com.terrypacker.cardcollection.ui.view.card;
 
 import com.terrypacker.cardcollection.repository.AbstractPropertyFilter;
-import com.terrypacker.cardcollection.repository.cardcollection.CardRecordFilter;
+import com.terrypacker.cardcollection.repository.card.CardRecordFilter;
 
 /**
  * @author Terry Packer

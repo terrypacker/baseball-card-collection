@@ -1,4 +1,4 @@
-package com.terrypacker.cardcollection.ui.view.cardcollection;
+package com.terrypacker.cardcollection.ui.view.card;
 
 import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.service.CardService;

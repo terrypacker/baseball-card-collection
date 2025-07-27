@@ -1,4 +1,4 @@
-package com.terrypacker.cardcollection.repository.cardcollection;
+package com.terrypacker.cardcollection.repository.card;
 
 import com.terrypacker.cardcollection.db.tables.Collectorcard;
 import com.terrypacker.cardcollection.db.tables.records.CollectorcardRecord;
@@ -8,7 +8,6 @@ import com.terrypacker.cardcollection.entity.card.Sport;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import com.terrypacker.cardcollection.repository.JooqRepository;
 import com.terrypacker.cardcollection.repository.ownedcard.OwnedCardRepository;
-import com.terrypacker.cardcollection.ui.view.cardcollection.CardFilter;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public class CardJooqRepository extends
-    JooqRepository<Collectorcard, CollectorCard, CollectorcardRecord, CardFilter> implements
+    JooqRepository<Collectorcard, CollectorCard, CollectorcardRecord, CardRecordFilter> implements
     CardRepository {
 
     private final OwnedCardRepository ownedCardRepository;

@@ -17,8 +17,6 @@ import org.jooq.impl.TableImpl;
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -27,9 +25,7 @@ import reactor.core.publisher.Mono;
  * @param <T>
  * @param <E> - model used to transfer record out to service
  */
-public abstract class JooqRepository<T extends TableImpl<R>, E extends IdEntity, R extends Record, F extends EntityFilter> implements
-    ReactiveSortingRepository<E, Integer>,
-    ReactiveCrudRepository<E, Integer> {
+public abstract class JooqRepository<T extends TableImpl<R>, E extends IdEntity, R extends Record, F extends EntityFilter> implements ReactiveRepository<E, F> {
 
     protected final DSLContext create;
     protected final T table;
@@ -38,7 +34,6 @@ public abstract class JooqRepository<T extends TableImpl<R>, E extends IdEntity,
         this.create = dslContext;
         this.table = table;
     }
-
 
     public Mono<E> findById(Integer id) {
         return Mono.justOrEmpty(
@@ -251,6 +246,7 @@ public abstract class JooqRepository<T extends TableImpl<R>, E extends IdEntity,
     protected abstract R mapToRecord(E entity);
     protected abstract Field<Integer> getIdField();
 
+    @Override
     public Mono<E> findByExample(F filter) {
         Condition condition = DSL.trueCondition();
         for (Filter f : filter.getFilters()) {

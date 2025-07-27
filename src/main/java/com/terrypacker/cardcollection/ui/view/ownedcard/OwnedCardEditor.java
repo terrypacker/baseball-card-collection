@@ -5,7 +5,7 @@ import com.terrypacker.cardcollection.entity.ownedcard.OwnedCardBuilder;
 import com.terrypacker.cardcollection.service.CardService;
 import com.terrypacker.cardcollection.service.OwnedCardService;
 import com.terrypacker.cardcollection.ui.view.AbstractEntityEditor;
-import com.terrypacker.cardcollection.ui.view.cardcollection.CardSelect;
+import com.terrypacker.cardcollection.ui.view.card.CardSelect;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.TextField;

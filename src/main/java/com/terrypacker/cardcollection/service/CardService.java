@@ -1,8 +1,8 @@
 package com.terrypacker.cardcollection.service;
 
 import com.terrypacker.cardcollection.entity.card.CollectorCard;
-import com.terrypacker.cardcollection.repository.cardcollection.CardJooqRepository;
-import com.terrypacker.cardcollection.repository.cardcollection.CardRecordFilter;
+import com.terrypacker.cardcollection.repository.card.CardJooqRepository;
+import com.terrypacker.cardcollection.repository.card.CardRecordFilter;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -12,7 +12,7 @@ import com.terrypacker.cardcollection.entity.collection.CardInCollection;
 import com.terrypacker.cardcollection.entity.collection.CardInCollectionBuilder;
 import com.terrypacker.cardcollection.entity.collection.CardInCollectionCsvMappingStrategy;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
-import com.terrypacker.cardcollection.repository.cardcollection.CardRecordFilter;
+import com.terrypacker.cardcollection.repository.card.CardRecordFilter;
 import com.terrypacker.cardcollection.repository.ownedcard.OwnedCardRecordFilter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -8,7 +8,7 @@ import com.terrypacker.cardcollection.service.OwnedCardValueService;
 import com.terrypacker.cardcollection.service.ebay.EbayBrowseService;
 import com.terrypacker.cardcollection.ui.ValidationMessage;
 import com.terrypacker.cardcollection.ui.view.AbstractFilteredGrid;
-import com.terrypacker.cardcollection.ui.view.cardcollection.CardTile;
+import com.terrypacker.cardcollection.ui.view.card.CardTile;
 import com.terrypacker.ebay.browse.models.ItemSummary;
 import com.terrypacker.ebay.browse.models.SearchPagedCollection;
 import com.vaadin.flow.component.Component;

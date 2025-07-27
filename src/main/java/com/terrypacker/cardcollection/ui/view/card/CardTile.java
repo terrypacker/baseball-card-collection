@@ -1,4 +1,4 @@
-package com.terrypacker.cardcollection.ui.view.cardcollection;
+package com.terrypacker.cardcollection.ui.view.card;
 
 import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -55,7 +54,7 @@ public class CardTile extends FormLayout {
             LocalDate now = LocalDate.now(ZoneId.systemDefault());
             List<Integer> selectableYears = IntStream
                 .range(now.getYear() - 100, now.getYear() + 1).boxed()
-                .collect(Collectors.toList());
+                .toList();
             year.setItems(selectableYears);
             year.setValue(this.collectorCard.getYear());
 
@@ -75,7 +74,7 @@ public class CardTile extends FormLayout {
                 new FormLayout.ResponsiveStep("0", 1),
                 // Use two columns, if layout's width exceeds 500px
                 new FormLayout.ResponsiveStep("500px", 2));
-            add(new Details(this.collectorCard.getPlayerName(), content));
+            add(new Details(this.collectorCard.getPlayerName() + " " + this.collectorCard.getYear(), content));
         }
 
         setResponsiveSteps(

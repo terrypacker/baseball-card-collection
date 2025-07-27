@@ -2,7 +2,7 @@ package com.terrypacker.cardcollection.service;
 
 import com.terrypacker.cardcollection.entity.IdEntity;
 import com.terrypacker.cardcollection.repository.EntityFilter;
-import com.terrypacker.cardcollection.repository.JooqRepository;
+import com.terrypacker.cardcollection.repository.ReactiveRepository;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.data.domain.Sort;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 /**
  * @author Terry Packer
  */
-public class AbstractService<E extends IdEntity, R extends JooqRepository, F extends EntityFilter> {
+public class AbstractService<E extends IdEntity, R extends ReactiveRepository<E, F>, F extends EntityFilter> {
 
     protected final R repository;
 

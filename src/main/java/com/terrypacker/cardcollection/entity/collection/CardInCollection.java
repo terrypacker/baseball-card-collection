@@ -1,5 +1,6 @@
 package com.terrypacker.cardcollection.entity.collection;
 
+import com.terrypacker.cardcollection.entity.IdEntity;
 import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Container for a card and its referenced data
  */
-public class CardInCollection {
+public class CardInCollection extends IdEntity {
     private final CollectorCard collectorCard;
     private final List<OwnedCard> ownedCards;
 

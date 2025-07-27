@@ -1,4 +1,4 @@
-package com.terrypacker.cardcollection.repository.cardcollection;
+package com.terrypacker.cardcollection.repository.card;
 
 import com.terrypacker.cardcollection.db.tables.Collectorcard;
 import com.terrypacker.cardcollection.entity.card.CollectorCard;

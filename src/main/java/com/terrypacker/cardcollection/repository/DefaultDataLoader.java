@@ -9,7 +9,7 @@ import com.terrypacker.cardcollection.entity.cardvalue.OwnedCardValueCsvMappingS
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCardCsvMappingStrategy;
 import com.terrypacker.cardcollection.entity.user.ApplicationUser;
-import com.terrypacker.cardcollection.repository.cardcollection.CardRepository;
+import com.terrypacker.cardcollection.repository.card.CardRepository;
 import com.terrypacker.cardcollection.repository.cardvalue.OwnedCardValueRepository;
 import com.terrypacker.cardcollection.repository.ownedcard.OwnedCardRepository;
 import com.terrypacker.cardcollection.repository.user.ApplicationUserRepository;
