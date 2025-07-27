@@ -65,8 +65,9 @@ public class CardInCollectionCsvMappingStrategy extends
         row[2] = bean.getCard().getTeamName();
         row[3] = bean.getCard().getBrand();
         row[4] = Integer.toString(bean.getCard().getCardNumber());
-        row[5] = Integer.toString(bean.getOwnedCards().size());
-        row[6] = bean.getCard().getNotes();
+        row[5] = Integer.toString(bean.getCard().getYear());
+        row[6] = Integer.toString(bean.getOwnedCards().size());
+        row[7] = bean.getCard().getNotes();
         return row;
     }
 }
