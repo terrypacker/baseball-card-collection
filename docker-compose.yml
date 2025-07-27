@@ -1,8 +1,8 @@
 services:
-  mango-orchard:
+  card-collection:
     ports:
       - 8080:8080
     volumes:
-      - ~/mango-orchard-data
+      - ~/card-collection-data
     restart: unless-stopped
-    image: mango-orchard:0.0.1-SNAPSHOT
+    image: card-collection:0.0.1-SNAPSHOT

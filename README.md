@@ -13,7 +13,7 @@ Application for tracking your card collection
 
 ### Run postgres container for testing
 ```shell
-docker run --name postgres-baseball -e POSTGRES_DB=baseball-card-collection -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:16
+docker run --name postgres-card-collection -e POSTGRES_DB=card-collection -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:16
 ```
 
 ### Build Full Application

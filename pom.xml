@@ -172,18 +172,18 @@
                                 <containerImage>postgres:16-alpine</containerImage> <!-- optional -->
                                 <username>admin</username> <!-- optional -->
                                 <password>admin</password> <!-- optional -->
-                                <databaseName>baseball-card-collection</databaseName> <!-- optional -->
+                                <databaseName>card-collection</databaseName> <!-- optional -->
                             </database>
                             <flyway/>
-                            <!--                             Generator parameters -->
+                            <!-- Generator parameters -->
                             <jooq>
                                 <generator>
                                     <database>
                                         <excludes>flyway_schema_history</excludes>
-                                        <inputSchema>baseball-card-collection</inputSchema>
+                                        <inputSchema>card-collection</inputSchema>
                                     </database>
                                     <target>
-                                        <packageName>com.terrypacker.baseball.db</packageName>
+                                        <packageName>com.terrypacker.cardcollection.db</packageName>
                                         <directory>target/generated-sources/jooq</directory>
                                     </target>
                                 </generator>

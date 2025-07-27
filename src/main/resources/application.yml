@@ -1,24 +1,26 @@
 terrypacker:
-  baseball:
-    card:
-      data-file: classpath:/config/cards.csv
-      owned:
-        data-file: classpath:/config/ownedCards.csv
-      value:
-        data-file: classpath:/config/cardValues.csv
+  card-collection:
+    data-loader:
+      load-card-data: false
+      card:
+        data-file: classpath:/config/cards.csv
+        owned:
+          data-file: classpath:/config/ownedCards.csv
+        value:
+          data-file: classpath:/config/cardValues.csv
 spring:
   h2:
     console:
       enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/baseball-card-collection
+    url: jdbc:postgresql://localhost:5432/card-collection
     driverClassName: org.postgresql.Driver
     username: admin
     password: admin
   jooq:
     sql-dialect: Postgres
   flyway:
-    default-schema: baseball-card-collection
+    default-schema: card-collection
 server:
   port: 8081
 #EBay Connectivity
