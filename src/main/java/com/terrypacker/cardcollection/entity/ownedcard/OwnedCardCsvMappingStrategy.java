@@ -36,7 +36,7 @@ public class OwnedCardCsvMappingStrategy extends
         throws CsvFieldAssignmentException, CsvChainedException {
         String[] row = new String[headers.length];
         row[0] = Integer.toString(bean.getId());
-        row[1] = Integer.toString(bean.getBaseballCardId());
+        row[1] = Integer.toString(bean.getCollectorCardId());
         row[2] = bean.getCardIdentifier();
         row[3] = bean.getLot();
         row[4] = bean.getNotes();

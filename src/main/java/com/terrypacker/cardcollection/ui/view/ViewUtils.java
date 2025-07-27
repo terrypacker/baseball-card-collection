@@ -1,7 +1,10 @@
 package com.terrypacker.cardcollection.ui.view;
 
+import com.terrypacker.cardcollection.ui.ViewErrorHandler;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -15,6 +18,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.ErrorEvent;
+import com.vaadin.flow.server.StreamResource;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,8 +35,11 @@ import org.springframework.stereotype.Component;
 public class ViewUtils {
 
     private final List<ViewDefinition> views;
-    public ViewUtils(@Autowired List<ViewDefinition> views) {
+    private final ViewErrorHandler errorHandler;
+
+    public ViewUtils(@Autowired List<ViewDefinition> views, ViewErrorHandler errorHandler) {
         this.views = views;
+        this.errorHandler = errorHandler;
     }
 
     public Tab findMyTab(List<Tab> tabs, String tabId) {
@@ -160,5 +168,27 @@ public class ViewUtils {
         return layout;
     }
 
+    /**
+     * Create a download button to handle downloading content
+     *
+     * @param label - label for button
+     * @param streamResource - resource to stream out on-click
+     * @return Anchor to place in View
+     */
+    public Anchor createDownloadAnchorButton(String label, StreamResource streamResource) {
+        Anchor anchor = new Anchor();
+        anchor.getElement().setAttribute("download", true);
+        Button downloadJsonButton = new Button(label);
+        anchor.add(downloadJsonButton);
+        anchor.setHref(streamResource);
+        return anchor;
+    }
 
+    /**
+     * Safely display a general error
+     * @param event - event to display
+     */
+    public void displayError(ErrorEvent event) {
+        this.errorHandler.error(event);
+    }
 }

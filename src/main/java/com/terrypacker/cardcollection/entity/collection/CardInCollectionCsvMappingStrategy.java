@@ -4,7 +4,7 @@ import com.opencsv.exceptions.CsvBeanIntrospectionException;
 import com.opencsv.exceptions.CsvChainedException;
 import com.opencsv.exceptions.CsvFieldAssignmentException;
 import com.terrypacker.cardcollection.entity.AbstractCsvMappingStrategy;
-import com.terrypacker.cardcollection.entity.card.CardBuilder;
+import com.terrypacker.cardcollection.entity.card.CollectorCardBuilder;
 import com.terrypacker.cardcollection.entity.card.Sport;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCardBuilder;
@@ -37,7 +37,7 @@ public class CardInCollectionCsvMappingStrategy extends
     @Override
     public CardInCollection populateNewBean(String[] line)
         throws CsvBeanIntrospectionException, CsvFieldAssignmentException, CsvChainedException {
-        CardBuilder cardBuilder = CardBuilder.get()
+        CollectorCardBuilder collectorCardBuilder = CollectorCardBuilder.get()
             .setSport(Sport.valueOf(line[0]))
             .setPlayerName(line[1])
             .setTeamName(line[2])
@@ -52,7 +52,7 @@ public class CardInCollectionCsvMappingStrategy extends
             ownedCards.add(OwnedCardBuilder.get().build());
         }
         return CardInCollectionBuilder.get()
-            .setCard(cardBuilder.build())
+            .setCard(collectorCardBuilder.build())
             .setOwnedCards(ownedCards).build();
     }
 

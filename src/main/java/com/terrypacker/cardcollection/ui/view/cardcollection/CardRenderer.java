@@ -1,6 +1,6 @@
 package com.terrypacker.cardcollection.ui.view.cardcollection;
 
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
@@ -8,11 +8,11 @@ import com.vaadin.flow.function.SerializableFunction;
 /**
  * @author Terry Packer
  */
-public class CardRenderer extends ComponentRenderer<Component, Card> {
+public class CardRenderer extends ComponentRenderer<Component, CollectorCard> {
 
 
     public CardRenderer(
-        SerializableFunction<Card, Component> componentFunction) {
+        SerializableFunction<CollectorCard, Component> componentFunction) {
         super(componentFunction);
     }
 }

@@ -1,5 +1,5 @@
 # Baseball Card Collection
-Application for tracking your card collection
+Application for tracking your collectorCard collection
 
 ## Current Limitations
 * Docker support has not been tested so the compose file needs properties set to work
@@ -13,7 +13,7 @@ Application for tracking your card collection
 
 ### Run postgres container for testing
 ```shell
-docker run --name postgres-card-collection -e POSTGRES_DB=card-collection -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:16
+docker run --name postgres-collectorCard-collection -e POSTGRES_DB=collectorCard-collection -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres:16
 ```
 
 ### Build Full Application

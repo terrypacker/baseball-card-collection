@@ -1,13 +1,13 @@
 package com.terrypacker.cardcollection.ui.view.cardcollection;
 
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.service.CardService;
 import com.vaadin.flow.component.combobox.ComboBox;
 
 /**
  * @author Terry Packer
  */
-public class CardSelect extends ComboBox<Card> {
+public class CardSelect extends ComboBox<CollectorCard> {
 
     private final CardDataProvider dataProvider;
     private final CardFilter filter;

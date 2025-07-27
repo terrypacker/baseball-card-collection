@@ -172,7 +172,7 @@
                                 <containerImage>postgres:16-alpine</containerImage> <!-- optional -->
                                 <username>admin</username> <!-- optional -->
                                 <password>admin</password> <!-- optional -->
-                                <databaseName>card-collection</databaseName> <!-- optional -->
+                                <databaseName>collectorCard-collection</databaseName> <!-- optional -->
                             </database>
                             <flyway/>
                             <!-- Generator parameters -->

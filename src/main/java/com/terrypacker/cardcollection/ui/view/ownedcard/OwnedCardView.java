@@ -101,7 +101,7 @@ public class OwnedCardView extends AbstractView {
         }, ownedCardValueService, cardService, ebayBrowseService);
 
         CardVirtualList cardSelect = new CardVirtualList(cardDataProvider, selected -> {
-            ownedCardGrid.getFilter().setBaseballCardId(selected.getId());
+            ownedCardGrid.getFilter().setCollectorCardId(selected.getId());
         });
         TextField nameFilter = new TextField("Search by name");
         CardFilter filter = new CardFilter(cardDataProvider);

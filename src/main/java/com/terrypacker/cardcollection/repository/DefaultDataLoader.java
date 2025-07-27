@@ -2,8 +2,8 @@ package com.terrypacker.cardcollection.repository;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.terrypacker.cardcollection.entity.card.Card;
-import com.terrypacker.cardcollection.entity.card.CardCsvMappingStrategy;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
+import com.terrypacker.cardcollection.entity.card.CollectorCardCsvMappingStrategy;
 import com.terrypacker.cardcollection.entity.cardvalue.OwnedCardValue;
 import com.terrypacker.cardcollection.entity.cardvalue.OwnedCardValueCsvMappingStrategy;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
@@ -78,18 +78,18 @@ public class DefaultDataLoader implements ApplicationListener<ContextRefreshedEv
                 //Insert Cards from CSV
                 try (Reader cardReader = new BufferedReader(
                     new InputStreamReader(cardDataFile.getInputStream()));) {
-                    CsvToBean<Card> csvReader =
+                    CsvToBean<CollectorCard> csvReader =
                         new CsvToBeanBuilder(cardReader).withMappingStrategy(
-                                new CardCsvMappingStrategy())
+                                new CollectorCardCsvMappingStrategy())
                             .withSeparator(',').withIgnoreLeadingWhiteSpace(true)
                             .withIgnoreEmptyLine(true)
                             .build();
 
-                    Iterator<Card> it = csvReader.iterator();
+                    Iterator<CollectorCard> it = csvReader.iterator();
                     while (it.hasNext()) {
-                        Card card = it.next();
-                        card.setId(null);
-                        this.cardRepository.save(card).block();
+                        CollectorCard collectorCard = it.next();
+                        collectorCard.setId(null);
+                        this.cardRepository.save(collectorCard).block();
                     }
                 }
 

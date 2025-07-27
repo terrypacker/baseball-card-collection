@@ -1,20 +1,20 @@
 package com.terrypacker.cardcollection.entity.collection;
 
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import java.util.List;
 
 public class CardInCollectionBuilder {
 
-    private Card card;
+    private CollectorCard collectorCard;
     private List<OwnedCard> ownedCards;
 
     public static CardInCollectionBuilder get() {
         return new CardInCollectionBuilder();
     }
 
-    public CardInCollectionBuilder setCard(Card card) {
-        this.card = card;
+    public CardInCollectionBuilder setCard(CollectorCard collectorCard) {
+        this.collectorCard = collectorCard;
         return this;
     }
 
@@ -24,6 +24,6 @@ public class CardInCollectionBuilder {
     }
 
     public CardInCollection build() {
-        return new CardInCollection(card, ownedCards);
+        return new CardInCollection(collectorCard, ownedCards);
     }
 }

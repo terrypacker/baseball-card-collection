@@ -1,6 +1,6 @@
 package com.terrypacker.cardcollection.ui.view.cardcollection;
 
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.ui.ValidationMessage;
 import com.terrypacker.cardcollection.ui.view.AbstractFilteredGrid;
 import com.vaadin.flow.component.Component;
@@ -23,20 +23,20 @@ import java.util.stream.IntStream;
 /**
  * @author Terry Packer
  */
-public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
+public class CardGrid extends AbstractFilteredGrid<CollectorCard, CardFilter> {
 
     private CardDataProvider dataProvider;
 
-    private Grid.Column<Card> sportColumn;
-    private Grid.Column<Card> playerColumn;
-    private Grid.Column<Card> teamColumn;
-    private Grid.Column<Card> brandColumn;
-    private Grid.Column<Card> cardNumberColumn;
-    private Grid.Column<Card> yearColumn;
-    private Grid.Column<Card> notesColumn;
-    private Grid.Column<Card> ownedCardsColumn;
+    private Grid.Column<CollectorCard> sportColumn;
+    private Grid.Column<CollectorCard> playerColumn;
+    private Grid.Column<CollectorCard> teamColumn;
+    private Grid.Column<CollectorCard> brandColumn;
+    private Grid.Column<CollectorCard> cardNumberColumn;
+    private Grid.Column<CollectorCard> yearColumn;
+    private Grid.Column<CollectorCard> notesColumn;
+    private Grid.Column<CollectorCard> ownedCardsColumn;
 
-    public CardGrid(CardDataProvider dataProvider, Consumer<Card> onSelected) {
+    public CardGrid(CardDataProvider dataProvider, Consumer<CollectorCard> onSelected) {
         super(dataProvider.withConfigurableFilter(), new CardFilter(dataProvider), onSelected);
         this.dataProvider = dataProvider;
         setupColumns();
@@ -49,27 +49,27 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
             .setHeader("Sport")
             .setSortable(true)
             .setSortProperty("sport");
-        this.playerColumn = addColumn(Card::getPlayerName)
+        this.playerColumn = addColumn(CollectorCard::getPlayerName)
             .setHeader("Player")
             .setSortable(true)
             .setSortProperty("player");
-        this.teamColumn = addColumn(Card::getTeamName)
+        this.teamColumn = addColumn(CollectorCard::getTeamName)
             .setHeader("Team")
             .setSortable(true)
             .setSortProperty("team");
-        this.brandColumn = addColumn(Card::getBrand)
+        this.brandColumn = addColumn(CollectorCard::getBrand)
             .setHeader("Brand")
             .setSortable(true)
             .setSortProperty("brand");
-        this.cardNumberColumn = addColumn(Card::getCardNumber)
+        this.cardNumberColumn = addColumn(CollectorCard::getCardNumber)
             .setHeader("Card Number")
             .setSortable(true)
             .setSortProperty("cardnumber");
-        this.yearColumn = addColumn(Card::getYear)
+        this.yearColumn = addColumn(CollectorCard::getYear)
             .setHeader("Year")
             .setSortable(true)
             .setSortProperty("year");
-        this.notesColumn = addColumn(Card::getNotes)
+        this.notesColumn = addColumn(CollectorCard::getNotes)
             .setHeader("Notes")
             .setSortable(true)
             .setSortProperty("notes");
@@ -116,8 +116,8 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
             .range(now.getYear() - 100, now.getYear() + 1).boxed()
             .collect(Collectors.toList());
 
-        Binder<Card> binder = new Binder<>(Card.class);
-        Editor<Card> editor = getEditor();
+        Binder<CollectorCard> binder = new Binder<>(CollectorCard.class);
+        Editor<CollectorCard> editor = getEditor();
         editor.setBinder(binder);
 
         TextField playerNameField = new TextField();
@@ -127,7 +127,7 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
         binder.forField(playerNameField)
             .asRequired("Player name must not be empty")
             .withStatusLabel(playerNameValidationMessage)
-            .bind(Card::getPlayerName, Card::setPlayerName);
+            .bind(CollectorCard::getPlayerName, CollectorCard::setPlayerName);
         playerColumn.setEditorComponent(playerNameField);
 
         TextField teamField = new TextField();
@@ -137,7 +137,7 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
         binder.forField(teamField)
             .asRequired("Team must not be empty")
             .withStatusLabel(teamValidationMessage)
-            .bind(Card::getTeamName, Card::setTeamName);
+            .bind(CollectorCard::getTeamName, CollectorCard::setTeamName);
         teamColumn.setEditorComponent(teamField);
 
         TextField brandField = new TextField();
@@ -147,7 +147,7 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
         binder.forField(brandField)
             .asRequired("Brand must not be empty")
             .withStatusLabel(brandValidationMessage)
-            .bind(Card::getBrand, Card::setBrand);
+            .bind(CollectorCard::getBrand, CollectorCard::setBrand);
         brandColumn.setEditorComponent(brandField);
 
         IntegerField cardNumberField = new IntegerField();
@@ -157,7 +157,7 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
         binder.forField(cardNumberField)
             .asRequired("Card Number must not be empty")
             .withStatusLabel(cardNumberValidationMessage)
-            .bind(Card::getCardNumber, Card::setCardNumber);
+            .bind(CollectorCard::getCardNumber, CollectorCard::setCardNumber);
         cardNumberColumn.setEditorComponent(cardNumberField);
 
         ComboBox<Integer> yearField = new ComboBox<>();
@@ -168,7 +168,7 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
         binder.forField(yearField)
             .asRequired("Year must not be empty")
             .withStatusLabel(yearValidationMessage)
-            .bind(Card::getYear, Card::setYear);
+            .bind(CollectorCard::getYear, CollectorCard::setYear);
         yearColumn.setEditorComponent(yearField);
 
         TextField notesField = new TextField();
@@ -177,7 +177,7 @@ public class CardGrid extends AbstractFilteredGrid<Card, CardFilter> {
         addCloseHandler(notesField, editor);
         binder.forField(notesField)
             .withStatusLabel(notesValidationMessage)
-            .bind(Card::getNotes, Card::setNotes);
+            .bind(CollectorCard::getNotes, CollectorCard::setNotes);
         notesColumn.setEditorComponent(notesField);
 
         addItemDoubleClickListener(e -> {

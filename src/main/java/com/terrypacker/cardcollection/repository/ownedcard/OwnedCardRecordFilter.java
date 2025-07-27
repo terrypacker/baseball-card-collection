@@ -1,6 +1,6 @@
 package com.terrypacker.cardcollection.repository.ownedcard;
 
-import com.terrypacker.cardcollection.db.tables.Baseballcard;
+import com.terrypacker.cardcollection.db.tables.Collectorcard;
 import com.terrypacker.cardcollection.db.tables.Ownedcard;
 import com.terrypacker.cardcollection.repository.EntityFilter;
 import com.terrypacker.cardcollection.repository.Filter.Matcher;
@@ -10,7 +10,7 @@ import com.terrypacker.cardcollection.repository.PropertyStringFilter;
 public class OwnedCardRecordFilter extends EntityFilter {
 
     protected final PropertyIntegerFilter id;
-    protected final PropertyIntegerFilter baseballCardId;
+    protected final PropertyIntegerFilter collectorCardId;
     protected final PropertyStringFilter cardIdentifier;
     protected final PropertyStringFilter lot;
     protected final PropertyStringFilter notes;
@@ -21,9 +21,9 @@ public class OwnedCardRecordFilter extends EntityFilter {
         this.id.setField(Ownedcard.OWNEDCARD.ID);
         this.id.setMatcher(Matcher.EQUALS);
 
-        this.baseballCardId = new PropertyIntegerFilter();
-        this.baseballCardId.setField(Ownedcard.OWNEDCARD.BASEBALLCARDID);
-        this.baseballCardId.setMatcher(Matcher.EQUALS);
+        this.collectorCardId = new PropertyIntegerFilter();
+        this.collectorCardId.setField(Ownedcard.OWNEDCARD.COLLECTORCARDID);
+        this.collectorCardId.setMatcher(Matcher.EQUALS);
 
         this.cardIdentifier = new PropertyStringFilter();
         this.cardIdentifier.setField(Ownedcard.OWNEDCARD.CARDIDENTIFIER);
@@ -34,11 +34,11 @@ public class OwnedCardRecordFilter extends EntityFilter {
         this.lot.setMatcher(Matcher.CONTAINS);
 
         this.notes = new PropertyStringFilter();
-        this.notes.setField(Baseballcard.BASEBALLCARD.NOTES);
+        this.notes.setField(Collectorcard.COLLECTORCARD.NOTES);
         this.notes.setMatcher(Matcher.CONTAINS);
 
         this.filters.add(id);
-        this.filters.add(baseballCardId);
+        this.filters.add(collectorCardId);
         this.filters.add(cardIdentifier);
         this.filters.add(lot);
         this.filters.add(notes);
@@ -49,9 +49,9 @@ public class OwnedCardRecordFilter extends EntityFilter {
         filterSet(this.id);
     }
 
-    public void setBaseballCardId(Integer id) {
-        this.baseballCardId.setFilterValue(id);
-        filterSet(this.baseballCardId);
+    public void setCollectorCardId(Integer id) {
+        this.collectorCardId.setFilterValue(id);
+        filterSet(this.collectorCardId);
     }
 
     public void setCardIdentifier(String cardIdentifier) {

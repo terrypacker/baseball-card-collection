@@ -1,4 +1,4 @@
-CREATE TABLE baseballCard(
+CREATE TABLE collectorCard(
     id SERIAL,
     sport VARCHAR(255) NOT NULL,
     player VARCHAR(100) NOT NULL,
@@ -12,12 +12,12 @@ CREATE TABLE baseballCard(
 
 CREATE TABLE ownedCard(
      id SERIAL,
-     baseballCardId INT NOT NULL,
+     collectorCardId INT NOT NULL,
      cardIdentifier VARCHAR(255),
      lot VARCHAR(255),
      notes TEXT,
      PRIMARY KEY (id),
-     CONSTRAINT ownedCardFk1 FOREIGN KEY (baseballCardId) references baseballCard(id) ON DELETE CASCADE
+     CONSTRAINT ownedCardFk1 FOREIGN KEY (collectorCardId) references collectorCard(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ownedCardValue (

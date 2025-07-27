@@ -5,7 +5,6 @@ import com.terrypacker.cardcollection.db.tables.records.OwnedcardRecord;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCardBuilder;
 import com.terrypacker.cardcollection.repository.JooqRepository;
-import com.terrypacker.cardcollection.ui.view.ownedcard.OwnedCardFilter;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ import reactor.core.publisher.Flux;
  */
 @Repository
 public class OwnedCardJooqRepository extends
-    JooqRepository<Ownedcard, OwnedCard, OwnedcardRecord, OwnedCardFilter> implements
+    JooqRepository<Ownedcard, OwnedCard, OwnedcardRecord, OwnedCardRecordFilter> implements
     OwnedCardRepository {
 
     public OwnedCardJooqRepository(DSLContext dslContext) {
@@ -24,16 +23,16 @@ public class OwnedCardJooqRepository extends
     }
 
     @Override
-    public Flux<OwnedCard> getOwnedCardsByBaseballCardId(int baseballCardId) {
+    public Flux<OwnedCard> getOwnedCardsByCollectorCardId(int collectorCardId) {
         return Flux.fromStream(
-            create.fetchStream(table, table.BASEBALLCARDID.eq(baseballCardId)).map(this::unmapFromRecord));
+            create.fetchStream(table, table.COLLECTORCARDID.eq(collectorCardId)).map(this::unmapFromRecord));
     }
 
     @Override
     protected OwnedCard unmapFromRecord(OwnedcardRecord record) {
         return OwnedCardBuilder.get()
             .setId(record.getId())
-            .setBaseballCardId(record.getBaseballcardid())
+            .setBaseballCardId(record.getCollectorcardid())
             .setCardIdentifier(record.getCardidentifier())
             .setLot(record.getLot())
             .setNotes(record.getNotes())
@@ -44,7 +43,7 @@ public class OwnedCardJooqRepository extends
     protected OwnedcardRecord mapToRecord(OwnedCard entity) {
         OwnedcardRecord record = new OwnedcardRecord();
         record.setId(entity.getId());
-        record.setBaseballcardid(entity.getBaseballCardId());
+        record.setCollectorcardid(entity.getCollectorCardId());
         record.setCardidentifier(entity.getCardIdentifier());
         record.setLot(entity.getLot());
         record.setNotes(entity.getNotes());

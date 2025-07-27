@@ -5,7 +5,7 @@ import com.terrypacker.cardcollection.entity.IdEntity;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import java.util.List;
 
-public class Card extends IdEntity {
+public class CollectorCard extends IdEntity {
 
     private Sport sport;
     private String playerName;
@@ -16,7 +16,7 @@ public class Card extends IdEntity {
     private String notes;
     private List<OwnedCard> ownedCards;
 
-    public Card(Integer id, Sport sport, String playerName, String teamName, String brand,
+    public CollectorCard(Integer id, Sport sport, String playerName, String teamName, String brand,
         Integer cardNumber,
         Integer year, String notes, List<OwnedCard> ownedCards) {
         this.id = id;

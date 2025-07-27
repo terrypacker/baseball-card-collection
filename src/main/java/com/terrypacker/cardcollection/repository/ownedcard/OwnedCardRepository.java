@@ -11,5 +11,5 @@ import reactor.core.publisher.Flux;
 public interface OwnedCardRepository extends ReactiveSortingRepository<OwnedCard, Integer>,
     ReactiveCrudRepository<OwnedCard, Integer> {
 
-    public Flux<OwnedCard> getOwnedCardsByBaseballCardId(int baseballCardId);
+    Flux<OwnedCard> getOwnedCardsByCollectorCardId(int collectorCardId);
 }

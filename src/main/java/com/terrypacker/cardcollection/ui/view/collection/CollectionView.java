@@ -13,6 +13,7 @@ import com.terrypacker.cardcollection.ui.view.cardcollection.CardGrid;
 import com.terrypacker.cardcollection.ui.view.ownedcard.OwnedCardDataProvider;
 import com.terrypacker.cardcollection.ui.view.ownedcard.OwnedCardGrid;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -20,14 +21,22 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.ErrorEvent;
+import com.vaadin.flow.server.StreamResource;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.PermitAll;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.input.BOMInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 
 /**
  * @author Terry Packer
@@ -35,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PermitAll
 @Route("/collection")
 public class CollectionView extends AbstractView {
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public static final String TITLE = "Collection";
     public static final String TAB_ID = "collection";
@@ -87,11 +97,11 @@ public class CollectionView extends AbstractView {
         CardDataProvider cardDataProvider = new CardDataProvider(
             cardService);
         CardGrid grid = new CardGrid(cardDataProvider, card -> {
-            ownedCardGrid.getFilter().setBaseballCardId(card.getId());
+            ownedCardGrid.getFilter().setCollectorCardId(card.getId());
         });
         layout.add(grid);
 
-        //TODO Move to contained component
+        //Upload collection file
         FormLayout form = new FormLayout();
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
@@ -101,15 +111,33 @@ public class CollectionView extends AbstractView {
             InputStream inputStream = buffer.getInputStream(fileName);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 BOMInputStream.builder().setInclude(false).setInputStream(inputStream).get(),
-                StandardCharsets.UTF_8))){
-                collectionService.importCards(reader,
-                    cardInCollection -> {
-                        System.out.println("Card in collection: " + cardInCollection);
-                });
+                StandardCharsets.UTF_8))) {
+                collectionService.importCollection(reader,
+                    cardInCollection -> log.info("Card in collection: {}", cardInCollection));
+                //TODO Display upload status result
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                log.error(e.getMessage(), e);
+                viewUtils.displayError(new ErrorEvent(e));
             }
+            grid.getDataProvider().refreshAll();
         });
         layout.add(form);
+
+        Anchor downloadAnchor = viewUtils.createDownloadAnchorButton("Download Collection CSV",
+            //TODO Add date time to filename
+            new StreamResource("card-collection.csv", () -> {
+                StringWriter stringWriter = new StringWriter();
+                try (BufferedWriter writer = new BufferedWriter(stringWriter)) {
+                    collectionService.exportCollection(writer);
+                    writer.flush();
+                    return new InputStreamResource(new ByteArrayInputStream(
+                        stringWriter.toString().getBytes())).getInputStream();
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    viewUtils.displayError(new ErrorEvent(e));
+                    return null;
+                }
+            }));
+        layout.add(downloadAnchor);
     }
 }

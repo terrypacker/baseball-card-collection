@@ -1,7 +1,7 @@
 package com.terrypacker.cardcollection.repository.cardcollection;
 
-import com.terrypacker.cardcollection.db.tables.Baseballcard;
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.db.tables.Collectorcard;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.repository.EntityFilter;
 import com.terrypacker.cardcollection.repository.Filter.Matcher;
 import com.terrypacker.cardcollection.repository.PropertyIntegerFilter;
@@ -21,35 +21,35 @@ public class CardRecordFilter extends EntityFilter {
     public CardRecordFilter() {
 
         this.id = new PropertyIntegerFilter();
-        this.id.setField(Baseballcard.BASEBALLCARD.ID);
+        this.id.setField(Collectorcard.COLLECTORCARD.ID);
         this.id.setMatcher(Matcher.EQUALS);
 
         this.sport = new PropertyStringFilter();
-        this.sport.setField(Baseballcard.BASEBALLCARD.SPORT);
+        this.sport.setField(Collectorcard.COLLECTORCARD.SPORT);
         this.sport.setMatcher(Matcher.CONTAINS);
 
         this.playerName = new PropertyStringFilter();
-        this.playerName.setField(Baseballcard.BASEBALLCARD.PLAYER);
+        this.playerName.setField(Collectorcard.COLLECTORCARD.PLAYER);
         this.playerName.setMatcher(Matcher.CONTAINS);
 
         this.teamName = new PropertyStringFilter();
-        this.teamName.setField(Baseballcard.BASEBALLCARD.TEAM);
+        this.teamName.setField(Collectorcard.COLLECTORCARD.TEAM);
         this.teamName.setMatcher(Matcher.CONTAINS);
 
         this.brand = new PropertyStringFilter();
-        this.brand.setField(Baseballcard.BASEBALLCARD.BRAND);
+        this.brand.setField(Collectorcard.COLLECTORCARD.BRAND);
         this.brand.setMatcher(Matcher.CONTAINS);
 
         this.cardNumber = new PropertyIntegerFilter();
-        this.cardNumber.setField(Baseballcard.BASEBALLCARD.CARDNUMBER);
+        this.cardNumber.setField(Collectorcard.COLLECTORCARD.CARDNUMBER);
         this.cardNumber.setMatcher(Matcher.EQUALS);
 
         this.year = new PropertyIntegerFilter();
-        this.year.setField(Baseballcard.BASEBALLCARD.YEAR);
+        this.year.setField(Collectorcard.COLLECTORCARD.YEAR);
         this.year.setMatcher(Matcher.EQUALS);
 
         this.notes = new PropertyStringFilter();
-        this.notes.setField(Baseballcard.BASEBALLCARD.NOTES);
+        this.notes.setField(Collectorcard.COLLECTORCARD.NOTES);
         this.notes.setMatcher(Matcher.CONTAINS);
 
         this.filters.add(id);
@@ -61,32 +61,32 @@ public class CardRecordFilter extends EntityFilter {
         filters.add(notes);
     }
 
-    public static CardRecordFilter fromExample(Card card) {
+    public static CardRecordFilter fromExample(CollectorCard collectorCard) {
         CardRecordFilter filter = new CardRecordFilter();
         filter.setMatcher(Matcher.EQUALS);
-        if(card.getId() != null) {
-            filter.setId(card.getId());
+        if(collectorCard.getId() != null) {
+            filter.setId(collectorCard.getId());
         }
-        if(card.getSport() != null) {
-            filter.setSport(card.getSport().name());
+        if(collectorCard.getSport() != null) {
+            filter.setSport(collectorCard.getSport().name());
         }
-        if(card.getPlayerName() != null) {
-            filter.setPlayerName(card.getPlayerName());
+        if(collectorCard.getPlayerName() != null) {
+            filter.setPlayerName(collectorCard.getPlayerName());
         }
-        if(card.getTeamName() != null) {
-            filter.setTeamName(card.getTeamName());
+        if(collectorCard.getTeamName() != null) {
+            filter.setTeamName(collectorCard.getTeamName());
         }
-        if(card.getBrand() != null) {
-            filter.setBrand(card.getBrand());
+        if(collectorCard.getBrand() != null) {
+            filter.setBrand(collectorCard.getBrand());
         }
-        if(card.getCardNumber() != null) {
-            filter.setCardNumber(card.getCardNumber());
+        if(collectorCard.getCardNumber() != null) {
+            filter.setCardNumber(collectorCard.getCardNumber());
         }
-        if(card.getYear() != null) {
-            filter.setYear(card.getYear());
+        if(collectorCard.getYear() != null) {
+            filter.setYear(collectorCard.getYear());
         }
-        if(card.getNotes() != null) {
-            filter.setNotes(card.getNotes());
+        if(collectorCard.getNotes() != null) {
+            filter.setNotes(collectorCard.getNotes());
         }
 
         return filter;

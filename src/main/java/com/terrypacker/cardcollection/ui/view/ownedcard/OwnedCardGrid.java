@@ -1,6 +1,6 @@
 package com.terrypacker.cardcollection.ui.view.ownedcard;
 
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.entity.cardvalue.OwnedCardValue;
 import com.terrypacker.cardcollection.entity.ownedcard.OwnedCard;
 import com.terrypacker.cardcollection.service.CardService;
@@ -63,8 +63,8 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
 
     protected void setupColumns() {
         this.baseballCard = addComponentColumn(oc -> {
-            Card card = cardService.findById(oc.getBaseballCardId()).block();
-            return new CardTile(card);
+            CollectorCard collectorCard = cardService.findById(oc.getCollectorCardId()).block();
+            return new CardTile(collectorCard);
         })
             .setHeader("Card")
             .setSortable(true)
@@ -94,8 +94,8 @@ public class OwnedCardGrid extends AbstractFilteredGrid<OwnedCard, OwnedCardFilt
         addComponentColumn( owned -> {
             Button getValueButton = new Button("Get Value");
             getValueButton.addClickListener(e -> {
-                Card card = cardService.findById(owned.getBaseballCardId()).block();
-                String query = card.getPlayerName() + " " + card.getYear() + " " + card.getBrand();
+                CollectorCard collectorCard = cardService.findById(owned.getCollectorCardId()).block();
+                String query = collectorCard.getPlayerName() + " " + collectorCard.getYear() + " " + collectorCard.getBrand();
                 try {
                     SearchPagedCollection result = this.ebayBrowseService.browse(query, 5, 0);
                     Dialog dialog = new Dialog("Results");

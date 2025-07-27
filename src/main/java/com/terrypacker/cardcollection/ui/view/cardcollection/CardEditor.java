@@ -1,6 +1,6 @@
 package com.terrypacker.cardcollection.ui.view.cardcollection;
 
-import com.terrypacker.cardcollection.entity.card.Card;
+import com.terrypacker.cardcollection.entity.card.CollectorCard;
 import com.terrypacker.cardcollection.entity.card.Sport;
 import com.terrypacker.cardcollection.service.CardService;
 import com.terrypacker.cardcollection.ui.view.AbstractEntityEditor;
@@ -21,11 +21,11 @@ import reactor.core.publisher.Mono;
 /**
  * @author Terry Packer
  */
-public class CardEditor extends AbstractEntityEditor<Card, CardService> {
+public class CardEditor extends AbstractEntityEditor<CollectorCard, CardService> {
 
 
     public CardEditor(CardService service,
-        Consumer<Card> postSave) {
+        Consumer<CollectorCard> postSave) {
         super(service, postSave);
         init();
     }
@@ -59,10 +59,10 @@ public class CardEditor extends AbstractEntityEditor<Card, CardService> {
 
         Button addCardButton = new Button("Add Card");
         addCardButton.addClickListener(event -> {
-            Card card = new Card(null, sport.getValue(), playerName.getValue(), teamName.getValue(),
+            CollectorCard collectorCard = new CollectorCard(null, sport.getValue(), playerName.getValue(), teamName.getValue(),
                 brand.getValue(), cardNumber.getValue(), year.getValue(), notes.getValue(), null);
-            Mono<Card> save = service.save(card);
-            Card result = save.block();
+            Mono<CollectorCard> save = service.save(collectorCard);
+            CollectorCard result = save.block();
             postSave.accept(result);
         });
         add(addCardButton);

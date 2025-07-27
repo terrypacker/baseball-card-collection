@@ -8,8 +8,8 @@ import com.terrypacker.cardcollection.entity.AbstractCsvMappingStrategy;
 /**
  * @author Terry Packer
  */
-public class CardCsvMappingStrategy extends
-    AbstractCsvMappingStrategy<Card> {
+public class CollectorCardCsvMappingStrategy extends
+    AbstractCsvMappingStrategy<CollectorCard> {
 
     private static final String[] headers =
         new String[]{"id", "sport", "playerName", "teamName", "brand",
@@ -22,9 +22,9 @@ public class CardCsvMappingStrategy extends
 
 
     @Override
-    public Card populateNewBean(String[] line)
+    public CollectorCard populateNewBean(String[] line)
         throws CsvBeanIntrospectionException, CsvFieldAssignmentException, CsvChainedException {
-        return CardBuilder.get()
+        return CollectorCardBuilder.get()
             .setId(Integer.parseInt(line[0]))
             .setSport(Sport.valueOf(line[1]))
             .setPlayerName(line[2])
@@ -36,7 +36,7 @@ public class CardCsvMappingStrategy extends
     }
 
     @Override
-    public String[] transmuteBean(Card bean)
+    public String[] transmuteBean(CollectorCard bean)
         throws CsvFieldAssignmentException, CsvChainedException {
         String[] row = new String[headers.length];
         row[0] = Integer.toString(bean.getId());

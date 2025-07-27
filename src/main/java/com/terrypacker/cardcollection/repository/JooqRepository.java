@@ -64,7 +64,11 @@ public abstract class JooqRepository<T extends TableImpl<R>, E extends IdEntity,
         return Mono.fromCallable(() -> {
             R record = mapToRecord(entity);
             record.changed(getIdField(), false);
-            Integer id = create.insertInto(table).set(record).execute();
+            Integer id = create.insertInto(table)
+                .set(record)
+                .returningResult(getIdField())
+                .fetchOne()
+                .getValue(getIdField());
             entity.setId(id);
             return entity;
         });
