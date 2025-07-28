@@ -16,6 +16,7 @@ import com.github.appreciated.apexcharts.config.yaxis.builder.LabelsBuilder;
 import com.github.appreciated.apexcharts.helper.Coordinate;
 import com.github.appreciated.apexcharts.helper.Series;
 import com.terrypacker.cardcollection.entity.cardvalue.OwnedCardValue;
+import com.terrypacker.cardcollection.service.CardInCollectionService;
 import com.terrypacker.cardcollection.service.CardService;
 import com.terrypacker.cardcollection.service.OwnedCardService;
 import com.terrypacker.cardcollection.service.OwnedCardValueService;
@@ -24,14 +25,12 @@ import com.terrypacker.cardcollection.service.ebay.EbayBrowseService;
 import com.terrypacker.cardcollection.ui.view.AbstractView;
 import com.terrypacker.cardcollection.ui.view.ViewUtils;
 import com.terrypacker.cardcollection.ui.view.card.CardDataProvider;
-import com.terrypacker.cardcollection.ui.view.card.CardFilter;
-import com.terrypacker.cardcollection.ui.view.card.CardVirtualList;
+import com.terrypacker.cardcollection.ui.view.card.CardGrid;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.PermitAll;
@@ -56,6 +55,7 @@ public class OwnedCardView extends AbstractView {
     private final OwnedCardService ownedCardService;
     private final OwnedCardValueService ownedCardValueService;
     private final CardService cardService;
+    private final CardInCollectionService cardInCollectionService;
     private final EbayBrowseService ebayBrowseService;
 
     @Autowired
@@ -66,11 +66,13 @@ public class OwnedCardView extends AbstractView {
          ViewUtils viewUtils,
          OwnedCardValueService ownedCardValueService,
          CardService cardService,
+        CardInCollectionService cardInCollectionService,
          EbayBrowseService ebayBrowseService) {
         super(ownedCardViewDefinition, securityService, viewUtils);
         this.ownedCardService = ownedCardService;
         this.ownedCardValueService = ownedCardValueService;
         this.cardService = cardService;
+        this.cardInCollectionService = cardInCollectionService;
         this.ebayBrowseService = ebayBrowseService;
     }
 
@@ -85,10 +87,10 @@ public class OwnedCardView extends AbstractView {
         Series<OwnedCardValueCoordinate> ownedCardValueSeries = new Series<>();
         ApexCharts chart = createLineChart();
         chart.setHeight("500px");
+
         OwnedCardDataProvider dataProvider = new OwnedCardDataProvider(
             ownedCardService);
-        CardDataProvider cardDataProvider = new CardDataProvider(
-            cardService);
+        CardDataProvider cardDataProvider = new CardDataProvider(cardService);
 
         OwnedCardGrid ownedCardGrid = new OwnedCardGrid(dataProvider, c -> {
             Flux<OwnedCardValue> result = ownedCardValueService.getLatestValues(c, 100, Direction.ASC);
@@ -100,17 +102,12 @@ public class OwnedCardView extends AbstractView {
             populateChart(chart, new Series<>("Value", coordinates.toArray(new OwnedCardValueCoordinate[coordinates.size()])));
         }, ownedCardValueService, cardService, ebayBrowseService);
 
-        CardVirtualList cardSelect = new CardVirtualList(cardDataProvider, selected -> {
+        //Setup Collection Grid
+        CardGrid cardsGrid = new CardGrid(cardDataProvider, selected -> {
             ownedCardGrid.getFilter().setCollectorCardId(selected.getId());
         });
-        TextField nameFilter = new TextField("Search by name");
-        CardFilter filter = new CardFilter(cardDataProvider);
-        nameFilter.addValueChangeListener(event -> {
-            filter.setPlayerName(event.getValue());
-            cardDataProvider.setFilter(filter);
-        });
-        layout.add(nameFilter);
-        layout.add(cardSelect);
+        layout.add(cardsGrid);
+
         HorizontalLayout tableHeader = new HorizontalLayout();
         tableHeader.add(new H2("Owned Cards"));
         Button addButton = new Button("Add Owned Card");

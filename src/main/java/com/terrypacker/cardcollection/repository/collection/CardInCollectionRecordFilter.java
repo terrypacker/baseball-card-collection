@@ -72,6 +72,7 @@ public class CardInCollectionRecordFilter extends EntityFilter {
         this.filters.add(notes);
         this.filters.add(cardIdentifier);
         this.filters.add(lot);
-
     }
+
+
 }
